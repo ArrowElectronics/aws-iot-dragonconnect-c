@@ -32,12 +32,12 @@ int MSG_SetReportedState( int payload_len, char * payload, bool rep_state);
 //Globals
 
 char certDirectory[PATH_MAX + 1] = "../certs";
-char HostAddress[255] = "A1A97Y3SMARFZT.iot.us-east-1.amazonaws.com"; //"g.us-east-1.pb.iot.amazonaws.com";
+char HostAddress[255] = "data.iot.us-east-1.amazonaws.com";
 uint16_t port = 8883;
 
-char vol_button_topic[]="audio/events";
-char led_state_sub_topic[]="$aws/things/led/shadow/update/delta";
-char led_state_pub_topic[]="$aws/things/led/shadow/update";
+char vol_button_topic[]="things/%s/audio/events";
+char led_state_sub_topic[]="$aws/things/%s/shadow/update/delta";
+char led_state_pub_topic[]="$aws/things/%s/shadow/update";
 
 GMainLoop* loop = NULL;
 
@@ -207,8 +207,10 @@ int main(int argc, char** argv)
 	//
 	// Subscribe to LED status-changes topic
 	//
-	INFO("Subscribing to topic:%s", led_state_sub_topic);
-	rc = MQTT_Subscribe(led_state_sub_topic, QOS_0, MQTTcallbackHandler);
+        char topic[512];
+        sprintf(topic, led_state_sub_topic, thingID);
+	INFO("Subscribing to topic:%s", topic);
+	rc = MQTT_Subscribe(topic, QOS_0, MQTTcallbackHandler);
 	if (NONE_ERROR != rc) {
 		ERROR("Error[%d] subscribing to topic: %s", rc, led_state_sub_topic);
 	}
@@ -316,10 +318,12 @@ int MQTTcallbackHandler(MQTTCallbackParams params)
 	if(ret !=0)
 		goto JSON_ERROR;
 
+	char topic[512];
+        sprintf(topic, led_state_pub_topic, thingID);
 	printf("Sending payload: %s", payload);
-	rc = MQTT_Send_Message(led_state_pub_topic, payload, strlen(payload) );
+	rc = MQTT_Send_Message(topic, payload, strlen(payload) );
 	if (NONE_ERROR != rc)
-		ERROR("Could not publish new LED state to topic: %s", led_state_pub_topic );
+		ERROR("Could not publish new LED state to topic: %s", topic );
 
 	return 0;
 
@@ -348,11 +352,13 @@ gboolean On_VolUp_ButtonPress(GIOChannel *source, GIOCondition condition, gpoint
     //printf("ret:%d,  buf: %s, bytes_read:%d \n", ret, buf, (int) bytes_read);
 
 	char* thingID = (char*) data;
-	sprintf(payload, "{\n\"thingId\": \"%s\", \"timestamp\": \"%lu\", \"volume\": \"%s\" \n}\n", thingID, GetTimeSinceEpoch(), "increase");
+	sprintf(payload, "{\n\"timestamp\": \"%lu\", \"volume\": \"%s\" \n}\n", GetTimeSinceEpoch(), "increase");
 	printf("%s", payload);
 
 	/**/
-	rc = MQTT_Send_Message(vol_button_topic, payload, strlen(payload));
+	char topic[512];
+        sprintf(topic, vol_button_topic, thingID);        
+	rc = MQTT_Send_Message(topic, payload, strlen(payload));
 	if (NONE_ERROR != rc)
 			ERROR("Could not publish event: ");
 
