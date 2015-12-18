@@ -1,2 +1,5 @@
 *.iml
 .idea
+_site
+Gemfile.lock
+node_modules

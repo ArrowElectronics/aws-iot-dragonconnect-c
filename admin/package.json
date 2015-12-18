@@ -1,0 +1,28 @@
+{
+  "name": "dragonconnect-admin",
+  "version": "0.1.0",
+  "description": "Manage the configuration of the AWS resources needed for the DragonConnect example",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "admin": "node lib/admin.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/arrowelectronics/aws-iot-dragonconnect-c"
+  },
+  "author": "Arrow Electronics",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arrowelectronics/aws-iot-dragonconnect-c/issues"
+  },
+  "homepage": "https://github.com/arrowelectronics/aws-iot-dragonconnect-c",
+  "dependencies": {
+    "aws-sdk": "^2.2.19",
+    "bluebird": "^3.0.6",
+    "commander": "^2.9.0",
+    "dragonconnect-config": "^0.1.0",
+    "randomr": "^2.1.2",
+    "rimraf": "^2.4.4"
+  }
+}
