@@ -1,4 +1,3 @@
-CC = gcc
 
 #remove @ for no make command prints
 DEBUG=@
@@ -38,19 +37,13 @@ MQTT_INCLUDE_DIR += -I $(MQTT_C_DIR)
 MQTT_SRC_FILES += $(shell find $(MQTT_EMB_DIR)/ -name '*.c')
 MQTT_SRC_FILES += $(MQTT_C_DIR)/MQTTClient.c
 
+#glib-2.0
+GLIB_INCLUDE_DIR = $(shell pkg-config --cflags glib-2.0)
+LD_FLAG += -ldl -lm
+LD_FLAG += $(shell pkg-config --libs glib-2.0)
+LD_FLAG += $(shell pkg-config --libs libssl)
+LD_FLAG += $(shell pkg-config --libs libcrypto)
 
-#TLS - openSSL
-TLS_LIB_DIR = /usr/lib/
-TLS_INCLUDE_DIR = -I /usr/include/openssl
-EXTERNAL_LIBS += -L$(TLS_LIB_DIR)
-LD_FLAG += -Wl,-rpath,$(TLS_LIB_DIR)
-LD_FLAG += -ldl -lssl -lcrypto -lm
-
-#lib
-GLIB_INCLUDE_DIR = -I /usr/include/glib-2.0
-#GLIB_INCLUDE_DIR += -I /usr/lib/x86_64-linux-gnu/glib-2.0/include
-GLIB_INCLUDE_DIR += -I /usr/lib/aarch64-linux-gnu/glib-2.0/include
-LD_FLAG += -lglib-2.0
 
 #Aggregate all include and src directories
 INCLUDE_ALL_DIRS += $(IOT_INCLUDE_DIRS) 
@@ -58,7 +51,7 @@ INCLUDE_ALL_DIRS += $(MQTT_INCLUDE_DIR)
 INCLUDE_ALL_DIRS += $(TLS_INCLUDE_DIR)
 INCLUDE_ALL_DIRS += $(APP_INCLUDE_DIRS)
 INCLUDE_ALL_DIRS += $(GLIB_INCLUDE_DIR)
- 
+
 SRC_FILES += $(MQTT_SRC_FILES)
 SRC_FILES += $(APP_SRC_FILES)
 SRC_FILES += $(IOT_SRC_FILES)
@@ -75,7 +68,8 @@ COMPILER_FLAGS += $(LOG_FLAGS)
 MAKE_CMD = $(CC) $(SRC_FILES) $(COMPILER_FLAGS) -o $(APP_DIR)/$(APP_NAME) $(LD_FLAG) $(EXTERNAL_LIBS) $(INCLUDE_ALL_DIRS)
 
 all:
+	$(DEBUG)mkdir -p $(APP_DIR)
 	$(DEBUG)$(MAKE_CMD)
-	
+
 clean:
 	rm -rf $(APP_DIR)/$(APP_NAME)	

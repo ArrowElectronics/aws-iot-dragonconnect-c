@@ -14,10 +14,10 @@
 
 
 
-static const char* user_led1 = "/sys/class/leds/apq8016-sbc:green:user1/brightness";
-static const char* user_led2 = "/sys/class/leds/apq8016-sbc:green:user2/brightness";
-static const char* user_led3 = "/sys/class/leds/apq8016-sbc:green:user3/brightness";
-static const char* user_led4 = "/sys/class/leds/apq8016-sbc:green:user4/brightness";
+static const char* user_led1 = "/sys/class/leds/apq8016-sbc:green:user0/brightness";
+static const char* user_led2 = "/sys/class/leds/apq8016-sbc:green:user1/brightness";
+static const char* user_led3 = "/sys/class/leds/apq8016-sbc:green:user2/brightness";
+static const char* user_led4 = "/sys/class/leds/apq8016-sbc:green:user3/brightness";
 
 int GetLEDState(UserLed user_led, LED_State* state)
 {

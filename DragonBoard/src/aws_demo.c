@@ -319,7 +319,7 @@ int MQTTcallbackHandler(MQTTCallbackParams params)
 		goto JSON_ERROR;
 
 	char topic[512];
-        sprintf(topic, led_state_pub_topic, thingID);
+        sprintf(topic, led_state_pub_topic, GetMachineID());
 	printf("Sending payload: %s", payload);
 	rc = MQTT_Send_Message(topic, payload, strlen(payload) );
 	if (NONE_ERROR != rc)

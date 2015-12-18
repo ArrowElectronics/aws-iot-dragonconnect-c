@@ -17,7 +17,7 @@ char machineID[MAX_BUF]="";
 char* GetMachineID()
 {
 	FILE *fptr ;
-	fptr = fopen("/var/lib/dbus/machine-id","r");
+	fptr = fopen("/etc/machine-id","r");
 	if(!fptr)
 		return NULL;
 
