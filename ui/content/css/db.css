@@ -1,3 +1,40 @@
 body{
-	padding: 80px 0 0 0;
+	padding: 45px 0 0 0;
+}
+
+.header-partners {
+    width: 100%;
+    text-align: right;
+    margin-top: 3em;
+    overflow: auto;
+}
+.header-partners p {
+    margin-bottom: .25em;
+    opacity: .1;
+    background-color: #000;
+}
+.header-partners ul {
+    clear: both;
+    margin: 0;
+    padding: 0;
+}
+.header-partners li {
+    display: inline-block;
+    width: 183px;
+    height: 63px;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.header-partners li.arrow {
+    background: url("../gfxs/arrow_logo.png") no-repeat center center;
+}
+.header-partners li.snapdragon {
+    background: url("../gfxs/qualcomm_logo.png") no-repeat center center;
+}
+.header-partners li.sandisk {
+    background: url("../gfxs/sandisk_logo.png") no-repeat center center;
+}
+.header-partners li.fci {
+    background: url("../gfxs/fci_logo.png") no-repeat center center;
 }
