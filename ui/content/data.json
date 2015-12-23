@@ -1,0 +1,44 @@
+{
+    "volumes": [
+        {
+            "direction": "1",
+            "timestamp": "09:04:56"
+        },
+        {
+            "direction": "-1",
+            "timestamp": "10:04:57"
+        },
+        {
+            "direction": "-1",
+            "timestamp": "10:04:58"
+        },
+        {
+            "direction": "-1",
+            "timestamp": "10:04:59"
+        },
+        {
+            "direction": "1",
+            "timestamp": "11:04:56"
+        },
+        {
+            "direction": "-1",
+            "timestamp": "13:04:59"
+        },
+        {
+            "direction": "1",
+            "timestamp": "14:04:56"
+        },
+        {
+            "direction": "1",
+            "timestamp": "14:04:57"
+        },
+        {
+            "direction": "1",
+            "timestamp": "14:04:58"
+        },
+        {
+            "direction": "1",
+            "timestamp": "14:04:59"
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "dragonconnect-config",
+  "version": "0.1.0",
+  "description": "The configuration for the DragonConnect examples.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arrowelectronics/aws-iot-dragonconnect-c.git"
+  },
+  "keywords": [
+    "DragonBoard",
+    "AWSIoT"
+  ],
+  "author": "Arrow Electronics",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arrowelectronics/aws-iot-dragonconnect-c/issues"
+  },
+  "homepage": "https://github.com/arrowelectronics/aws-iot-dragonconnect-c#readme"
+}

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width"/>
+
+    <title>DragonBoard&trade; 410c</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/c3.min.css">
+    <link rel="stylesheet" href="css/db.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- JAVASCRIPT INCLUDES -->
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/d3.min.js"></script>
+    <!--<script src="js/c3.min.js"></script>-->
+    <script src="js/c3.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<!-- navigation -->
+<div class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand"><img src='gfxs/dragon-connect-logo@2x.png' width="254" /></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <!--<ul class="nav navbar-nav">-->
+                <!--<li class="active"><a href='#'>Volume and LED Control for DragonBoard (fa30bd)</a></li>-->
+            <!--</ul>-->
+            <ul class="nav navbar-nav navbar-right" id="label-account">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Select a Device <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Mac OSX (d424c4)</a></li>
+                        <li><a href="#">DragonBoard (fa30bd)</a></li>
+                        <li><a href="#">DragonBoard (fa60be)</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div>
+
+
+<div class="alert alert-success" id="status-alert" style="display:none;"></div>
+<!-- ./end navigation -->
+
+<div class='container'>
+    <div class='row'>
+        <div class='col-md-9'>
+            <div class="panel panel-default pointed-corners panel-eq-height">
+                <div class="panel-body">
+                    <div class='row'>
+                        <div class='col-md-12'>
+                            <h3 class="volume-page volume-log">Volume Change Log</h3>
+                            <p class="vol-desc">Most recent inputs for 2015-9-11</p>
+
+                            <div class="row volume-graph-wrap">
+                                <div class="col-md-12">
+                                    <div id='volume-graph' class="volume-graph"></div>
+                                </div>
+                            </div>
+                        </div> <!--col-md-12 -->
+                    </div>  <!-- row -->
+                </div> <!-- panel-body -->
+                <div class="time-wrap">
+                    <h5>2015-09-11 14:04:59</h5>
+                </div>
+            </div> <!--panel panel-default pointed-corners panel-eq-height-->
+        </div> <!--col-md-9-->
+
+        <div class='col-md-3'>
+            <div class="panel panel-default pointed-corners panel-eq-height">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="volume-page led-control">LED Control</h3>
+                            <p class="led-status"><span>Status:</span> LED off</p>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 col-md-12 btn-group-vertical" role="group" aria-label="Vertical button group">
+                                    <button type="button" class="btn btn-default btn-status">ON</button>
+                                    <button type="button" class="btn btn-default btn-status off">OFF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="time-wrap">
+                    <h5>2015-09-11 14:04:59</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+    <div class="footer">
+        <p class='text-muted text-center'>
+            <small>&copy; 2015 Arrow Electronics, inc. All rights reserved. Qualcomm, Adreno and Snapdragon are
+                trademarks of Qualcomm Incorporated, registered in the United States and other countries.
+            </small>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    $(function() {
+        var timeout;
+
+        $(window).on('resize', function () {
+            if (timeout) clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                // Equal height on the first 3 panels
+                var heights = $(".panel-eq-height").map(function () {
+                            return $(this).height();
+                        }).get(),
+                        maxHeight = Math.max.apply(null, heights);
+
+                $(".panel-eq-height").height( $(window).width() > 974 ? maxHeight : 'auto' );
+
+                // Get data
+                var request = $.ajax({
+                    url: "data.json",
+                    method: "POST",
+                    dataType: "json"
+                });
+
+                // Display volumes
+                request.done(function( data ) {
+                    var volGraph = $('#volume-graph'),
+                            circLeftPos = 6,
+                            timeLeftPos = -2,
+                            windowWidth = $(window).width(),
+                            numCircs,
+                            volumes;
+
+                    volGraph.empty();
+
+                    if(windowWidth >= 480) {
+                        numCircs = 11;
+                    } else if(windowWidth >= 740) {
+                        numCircs = 18;
+                    } else if(windowWidth >= 1200) {
+                        numCircs = 22;
+                    } else {
+                        numCircs = 7;
+                    }
+
+                    volumes = (data.volumes.length > numCircs) ? data.volumes.slice(-1*numCircs) : data.volumes;
+
+                    for(var i in volumes) {
+                        var item = volumes[i],
+                                volItem = $('<div class="volume-item"/>'),
+                                volCircle = $('<div class="volume-circle text-hide"/>'),
+                                volTime = $('<div class="volume-time"/>');
+
+                        volCircle
+                                .text(item.direction)
+                                .attr('title', item.direction)
+                                .addClass(item.direction == 1 ? 'circle-plus' : 'circle-minus')
+                                .css('left', circLeftPos)
+                                .appendTo(volItem);
+
+                        volTime
+                                .text(item.timestamp)
+                                .attr('title', item.timestamp)
+                                .css('left', timeLeftPos)
+                                .appendTo(volItem);
+
+                        volItem.appendTo(volGraph);
+
+                        circLeftPos += 34;
+                        timeLeftPos += 34;
+                    }
+                });
+            }, 250);
+        });
+        setTimeout(function() {
+            $(window).trigger('resize');
+        }, 250);
+    });
+</script>
+</body>
+</html>

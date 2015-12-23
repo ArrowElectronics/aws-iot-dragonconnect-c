@@ -1,8 +1,0 @@
-{
-  "name": "dragoncommand-things-led-retrieve",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "aws-sdk": "^2.2.0"
-  }
-}

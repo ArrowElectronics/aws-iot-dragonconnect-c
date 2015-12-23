@@ -1,0 +1,702 @@
+swagger: '2.0'
+info:
+  title: Arrow DragonConnect
+  description: >
+    The DragonConnect example records when a volume up or volume down
+    button is pressed using the _Amazon IoT Message Broker_.
+    In addition, it manages an LED using the _Amazon IoT Device Shadows_.
+    
+    
+    The host where the API is deployed is managed by the _Amazon
+    API Gateway_.  The _basePath_ is not defined as the API Gateway
+    will add it as an additional path element.
+  version: 0.1.0
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  ContentTypeHeader:
+    name: Content-Type
+    description: |
+      The content type of the request
+    in: header
+    type: string
+  AcceptHeader:
+    name: Accept
+    description: |
+      The accept type for the response
+    in: header
+    type: string
+responses:
+  InvalidEntityError:
+    description: |
+      The request was invalid.  Please check the developer documentation
+      and validate the content of the request.
+    schema:
+      $ref: '#/definitions/Error'
+    examples:
+      application/json:
+        {
+          "message": "InvalidEntityError: The entity is invalid."
+        }
+  ResourceNotFoundError:
+    description: |
+      The resource was not found in the environment.  For example,
+      this error might be raised when a resource associated with
+      a non-existent thing is attempted to be created.
+    schema:
+      $ref: '#/definitions/Error'
+    examples:
+      application/json:
+        {
+          "message": "ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information."
+        }
+  UnknownError:
+    description: |
+      An internal service error has occurred.  This may be the result
+      of an improper configuration such as invalid permissions.  For
+      some specific errors, such as invalid permissions, a specific
+      error will be returned (AccessDeniedError).
+    schema:
+      $ref: '#/definitions/Error'
+    examples:
+      application/json:
+        {
+          "message": "AccessDeniedError:  Please check the permissions needed to perform this function."
+        }
+paths:
+  /things:
+    get:
+      summary: Get the collection of things
+      description: |
+        Provides the collection of things that have an associated
+        principal.
+      parameters:
+        - $ref: '#/parameters/ContentTypeHeader'
+        - $ref: '#/parameters/AcceptHeader'
+      tags:
+        - Things
+      responses:
+        200:
+          description: |
+            An array of things
+          schema:
+            $ref: '#/definitions/ThingList'
+          examples:
+            application/json:
+              []
+            application/json:
+              [
+                {
+                  "thingId": "MyThing",
+                  "attributes": {
+                    "createdDate": 13423423
+                  }
+                },
+                {
+                  "thingId": "MyOtherThing"
+                }
+              ]
+        500:
+          $ref: '#/responses/UnknownError'
+      x-amazon-apigateway-integration:
+        type: 'AWS'
+        httpMethod: 'POST'
+        uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:624142053477:function:DragonConnect-things/invocations'
+        credentials: 'arn:aws:iam::624142053477:role/DragonConnect-ApiGateway-59f4'
+        requestTemplates:
+          application/json: |
+            {
+              "action": "retrieve",
+              "message": {}
+            }
+        responses:
+          'AccessDeniedError:.*':
+            statusCode: '500'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'UnknownError:.*':
+            statusCode: '500'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'default':
+            statusCode: '200'
+            responseTemplates:
+              application/json:
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      tags:
+        - CORS
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+      x-amazon-apigateway-integration:
+        type: mock
+        httpMethod: 'GET'
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods : "'*'"
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+            responseTemplates:
+              application/json: |
+                {}
+  /things/{thingId}:
+    parameters:
+      - name: thingId
+        description: The identifier of the thing.
+        in: path
+        required: true
+        type: string
+        minLength: 1
+        maxLength: 255
+        pattern: '^[a-zA-Z0-9_-]$'
+    get:
+      summary: Thing
+      description: |
+        Retrieves a thing with an identifier of _thingId_
+      parameters:
+        - $ref: '#/parameters/ContentTypeHeader'
+        - $ref: '#/parameters/AcceptHeader'
+      tags:
+        - Things
+      responses:
+        200:
+          description: |
+            The thing associated with _thingId_
+          schema:
+            $ref: '#/definitions/Thing'
+        400:
+          $ref: '#/responses/InvalidEntityError'
+        404:
+          $ref: '#/responses/ResourceNotFoundError'
+        500:
+          $ref: '#/responses/UnknownError'
+      x-amazon-apigateway-integration:
+        type: 'AWS'
+        httpMethod: 'POST'
+        uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:624142053477:function:DragonConnect-things/invocations'
+        credentials: 'arn:aws:iam::624142053477:role/DragonConnect-ApiGateway-59f4'
+        requestTemplates:
+          application/json: |
+            {
+              "action": "retrieve",
+              "message": {
+                "thingId": "$input.params('thingId')"
+              }
+            }
+        responses:
+          'InvalidEntityError:.*':
+            statusCode: '400'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'ResourceNotFoundError:.*':
+            statusCode: '404'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'AccessDeniedError:.*':
+            statusCode: '500'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'UnknownError:.*':
+            statusCode: '500'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'default':
+            statusCode: '200'
+            responseTemplates:
+              application/json:
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      tags:
+        - CORS
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+      x-amazon-apigateway-integration:
+        type: mock
+        httpMethod: 'GET'
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods : "'*'"
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+            responseTemplates:
+              application/json: |
+                {}
+  /things/{thingId}/audio/events:
+    parameters:
+      - name: thingId
+        description: The identifier of the thing.
+        in: path
+        required: true
+        type: string
+        minLength: 1
+        maxLength: 255
+        pattern: '^[a-zA-Z0-9_-]$'
+    get:
+      summary: Retrieve the Audio Events
+      description: |
+        Retrieves an array of audio events for a thing with an
+        identifier of _thingId_
+      tags:
+        - Audio Events
+      parameters:
+        - $ref: '#/parameters/ContentTypeHeader'
+        - $ref: '#/parameters/AcceptHeader'
+        - name: limit
+          description: |
+            The maximum number of volume events to retrieve.
+          in: 'query'
+          type: integer
+          default: 10
+      responses:
+        200:
+          description: |
+            A list of audio events.
+          schema:
+            $ref: '#/definitions/AudioEventList'
+          examples:
+            application/json: |
+              [
+                {
+                  "volume": "increase",
+                  "timestamp": 1449350254
+                },
+                {
+                  "volume": "decrease",
+                  "timestamp": 1449350121
+                },
+                {
+                  "volume": "decrease",
+                  "timestamp": 1449349632
+                },
+                {
+                  "volume": "increase",
+                  "timestamp": 1449348639
+                },
+                {
+                  "volume": "decrease",
+                  "timestamp": 1449347627
+                },
+                {
+                  "volume": "increase",
+                  "timestamp": 1449345819
+                }
+              ]
+        404:
+          $ref: '#/responses/ResourceNotFoundError'
+        500:
+          $ref: '#/responses/UnknownError'
+      x-amazon-apigateway-integration:
+        type: 'AWS'
+        httpMethod: 'POST'
+        uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:624142053477:function:DragonConnect-audioEvents/invocations'
+        credentials: 'arn:aws:iam::624142053477:role/DragonConnect-ApiGateway-59f4'
+        requestTemplates:
+          application/json: |
+            #set($limit = $input.params('limit'))
+            {
+              "action": "retrieve",
+              "message": {
+                "thingId": "$input.params('thingId')"#if ($limit != ""),
+                "limit": $limit#end
+              }
+            }
+        responses:
+          'InvalidEntityError:.*':
+            statusCode: '400'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'ResourceNotFoundError:.*':
+            statusCode: '404'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'AccessDeniedError:.*':
+            statusCode: '500'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'UnknownError:.*':
+            statusCode: '500'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'default':
+            statusCode: '200'
+            responseTemplates:
+              application/json:
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      tags:
+        - CORS
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+      x-amazon-apigateway-integration:
+        type: mock
+        httpMethod: 'GET,POST'
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods : "'*'"
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+            responseTemplates:
+              application/json: |
+                {}
+  /things/{thingId}/led:
+    parameters:
+      - name: thingId
+        description: The identifier of the thing.
+        in: path
+        required: true
+        type: string
+        minLength: 1
+        maxLength: 255
+        pattern: '^[a-zA-Z0-9_-]$'
+    get:
+      summary: Retrieve the status of the LED
+      description: |
+        Retrieves the status of the LED for a thing with an
+        identifier of _thingId_
+      parameters:
+        - $ref: '#/parameters/ContentTypeHeader'
+        - $ref: '#/parameters/AcceptHeader'
+      tags:
+        - LED
+      responses:
+        200:
+          description: |
+            The status of the LED for the thing with an identifier of
+            _thingId_.
+          schema:
+            $ref: '#/definitions/LED'
+          examples:
+            application/json: |
+              {
+                "active": true
+              }
+        400:
+          $ref: '#/responses/InvalidEntityError'
+        404:
+          $ref: '#/responses/ResourceNotFoundError'
+        500:
+          $ref: '#/responses/UnknownError'
+      x-amazon-apigateway-integration:
+        type: 'AWS'
+        httpMethod: 'POST'
+        uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:624142053477:function:DragonConnect-led/invocations'
+        requestTemplates:
+          application/json: |
+            {
+              "action": "retrieve",
+              "message": {
+                "thingId": "$input.params('thingId')"
+              }
+            }
+        credentials: 'arn:aws:iam::624142053477:role/DragonConnect-ApiGateway-59f4'
+        responses:
+          'InvalidEntityError:.*':
+            statusCode: '400'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'ResourceNotFoundError:.*':
+            statusCode: '404'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'AccessDeniedError:.*':
+            statusCode: '500'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'UnknownError:.*':
+            statusCode: '500'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'default':
+            statusCode: '200'
+            responseTemplates:
+              application/json:
+    post:
+      summary: Manage the status of the LED.
+      description: |
+        Submits a request to the thing to turn on or turn off the LED.
+      tags:
+        - LED
+      parameters:
+        - $ref: '#/parameters/ContentTypeHeader'
+        - $ref: '#/parameters/AcceptHeader'
+        - name: LED
+          description: |
+            Whether the LED should be active or inactive.
+          in: body
+          schema:
+            $ref: '#/definitions/AudioEvent'
+      responses:
+        202:
+          description: |
+            The thing with an identifier of _thingId_ has been asked to
+            set the state to that provided.  The thing may set the status.
+            Clients will need to retrieve the status using the GET
+            method of the resource.
+        400:
+          $ref: '#/responses/InvalidEntityError'
+        404:
+          $ref: '#/responses/ResourceNotFoundError'
+        500:
+          $ref: '#/responses/UnknownError'
+      x-amazon-apigateway-integration:
+        type: 'AWS'
+        httpMethod: 'POST'
+        uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:624142053477:function:DragonConnect-led/invocations'
+        credentials: 'arn:aws:iam::624142053477:role/DragonConnect-ApiGateway-59f4'
+        requestTemplates:
+          application/json: |
+            #set($active = $input.json('$.active'))
+            {
+              "action": "update",
+              "message": {
+                "thingId": "$input.params('thingId')"#if ($active != ""),
+                "active": $active#end
+              }
+            }
+        responses:
+          'InvalidEntityError:.*':
+            statusCode: '400'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'ResourceNotFoundError:.*':
+            statusCode: '404'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'AccessDeniedError:.*':
+            statusCode: '500'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'UnknownError:.*':
+            statusCode: '500'
+            responseTemplates:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "message": "$inputRoot.errorMessage"
+                }
+          'default':
+            statusCode: '202'
+            responseTemplates:
+              application/json:
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      tags:
+        - CORS
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+      x-amazon-apigateway-integration:
+        type: mock
+        httpMethod: 'GET,POST'
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods : "'*'"
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+            responseTemplates:
+              application/json: |
+                {}
+# The AWS Swagger add the example properly, but the AWS API Gateway views
+# a model definition with an example as invalid.  Therefore, examples are
+# not included.
+definitions:
+  AudioEvent:
+    type: object
+    properties:
+      volume:
+        type: string
+        description: |
+          Whether the volume was increased or decreased.
+        enum:
+          - 'increase'
+          - 'decrease'
+      timestamp:
+        type: integer
+        format: long
+        description: |
+          The time the event occurred in seconds from the Epoch, UTC.
+    required:
+      - volume
+      - timestamp
+  AudioEventList:
+    type: array
+    items:
+      $ref: '#/definitions/AudioEvent'
+  LED:
+    type: object
+    properties:
+      active:
+        type: boolean
+        description: |
+          True if the LED is active, false if it is inactive.
+    required:
+      - active
+  Thing:
+    type: object
+    properties:
+      thingId:
+        type: string
+        description: |
+          The attribute name.
+        minLength: 1
+        maxLength: 255
+        pattern: '^[a-zA-Z0-9_-]$'
+      attributes:
+        type: object
+        description: |
+          The attributes of a thing.
+        additionalProperties:
+          type: string
+    required:
+      - thingId
+  ThingList:
+    type: array
+    items:
+      $ref: '#/definitions/Thing'
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+    required:
+      - message
+
