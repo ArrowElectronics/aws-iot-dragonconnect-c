@@ -1,5 +1,4 @@
 ---
-title:  aws-iot-dragonconnect-c
 ---
 # aws-iot-dragonconnect-c
 
@@ -44,77 +43,55 @@ Your circuit should look similar to the following
 
 ![DragonBoard Manage LED Breadboard](docs/ManageLED_breadboard.png)
 
-## Configure the AWS IoT Services
+## Configure the AWS Services
 
-Configuring the AWS IoT services is done by
+The components of DragonConnect use the Amazon services as outlined in the
+following table
 
-* Create a principal for the 'thing'.  In this case, the DragonBoard.
+Component | Source Directory | AWS Services | Tools
+----------|------------------|--------------|------
+Configuration | config | | JavaScript
+Administration | admin | IAM, IoT, DynamoDB | Node, JavaScript
+Web | ui | s3 | AWS CLI
+Lambda | lambda | IoT, Lambda, DynamoDB | Node, JavaScript, Grunt
+API | api | API Gateway | UNIX (sed), Swagger, Java
 
-    ```sh
-    $ aws iot create-keys-and-certificate --set-as-active > keysAndCertificates
-    ```
+The following steps provide an overview of the steps to configure and deploy
+the DragonConnect example.  Each step may include installing the tools needed
+to complete it
 
-    The resultant file has the public and private keys for a thing in the following format
+1.  Configure the Amazon deployment region and account number in the Configuration component
+1.  Configure the foundational elements of DragonConnect
+1.  Deploy the lambda functions
+1.  Configure and deploy the API Gateway component
+1.  Configure and deploy the static HTML pages
+1.  Create and configure a thing
+1.  Start the client application
 
-    ```json
-    {
-      "certificateArn": "arn:aws:iot:...",
-      "certificatePem": "...",
-      "keyPair": {
-        "PublicKey": "...",
-        "PrivateKey": "..."
-      },
-      "certificateId": "..."
-    }
-    ```
+The instructions assume that you are performing the steps on the DragonBoard
+running Debian / Ubuntu and that the following tools are available
 
-    The public and private key have embedded newline characters.  In order to remove the newline characters use the following command
+* Node
+  * Amazon Lambda currently uses nodejs v0.10.36.  This should be updated as Amazon updates its nodejs version
+* Java 8
+* Python and the AWS CLI
 
-    ```sh
-    $ printf -- "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----\n" > thing.pub
-    $ printf -- "-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----\n" > thing.key
-    ```
+### General Configuration
 
-* Create a thing in the AWS IoT device registry.
+The general configuration is used by the admin and lambda modules.  Please
+update the index.js script to include the AWS deployment region and account
+number.  For example
 
-    ```sh
-    $ aws iot create-thing --thing-name dragonconnect
-    ```
+> region: 'us-east-1',
+> accountNumber: '012345678901',
 
-    The output of the command is
+### Foundational Elements
 
-    ```json
-    {
-      "thingArn": "arn:aws:iot:region:012345678901:thing/dragonconnect", 
-      "thingName": "dragonconnect"
-    }
-    ```
+The foundational elements involve configuring the IAM and IoT services as well
+as creating the DynamoDB table.  The instructions assume that the working
+directory is the 
 
-* Attach a principal to the thing.
-
-    ```sh
-    $ aws iot attach-thing-principal --thing-name dragonconnect --principal arn:aws:iot:region:012345678901:cert/e293dcaefc36d85d54cccce9a77e79d0f18ae49d1b154814d436dd89f55c5f33
-    ```
-
-* Creating a policy that enables the thing to use the appropriate topics.
-
-    ```sh
-    $ aws iot create-policy --policy-name dragonconnect --policy-document file://policies/dragonconnect.json
-    ```
-
-    The output of the command will be similar to
-
-    ```json
-    {
-      "policyName": "dragonconnect",
-      "policyArn": "arn:aws:iot:region:012345678901:policy/dragonconnect",
-      "policyDocument": "...",
-      "policyVersionId": "1"
-    }
-    ```
-
-* Attach the policy to the principal.
-
-    ```sh
-    $ aws iot attach-principal-policy --policy-name dragonconnect --principal arn:aws:iot:region:012345678901:cert/e293dcaefc36d85d54cccce9a77e79d0f18ae49d1b154814d436dd89f55c5f33
-    ```
+```sh
+$ cd admin
+$ npm install ../config
+```

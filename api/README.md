@@ -1,3 +1,5 @@
+---
+---
 # DragonConnect API
 
 # Introduction
@@ -5,12 +7,12 @@
 The DragonConnect Example uses the _Amazon API Gateway_ to fulfill requests
 made by the dashboard.  The DragonConnect API is defined using Swagger and
 the _Amazon API Gateway_ is configured using the
-![Amazon API Gateway Importer](https://github.com/awslabs/aws-apigateway-importer).
+[Amazon API Gateway Importer](https://github.com/awslabs/aws-apigateway-importer).
 The importer takes advantage of the Swagger extensions to configure
 Cross-Origin Resource Sharing (CORS).  The importer uses Java 8 so be sure
 it is installed on your device.
 
-The operations are defined in the ![DragonConnect API](./DragonConnectApi.html).
+The operations are defined in the [DragonConnect API](./DragonConnectApi.html).
 
 # API Configuration
 
@@ -70,3 +72,5 @@ $ aws apigateway get-rest-apis \
 The URL of the DragonConnect API will be available at
 
 > https://${apiId}.execute-api.${region}.amazonaws.com/${stage}
+
+Keep this URL as it will be needed for the web pages.
