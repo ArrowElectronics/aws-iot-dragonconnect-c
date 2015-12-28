@@ -1,0 +1,22 @@
+title: Arrow DragonConnect
+description: >
+  The Arrow DragonConnect example introduces those who have an Arrow
+  DragonBoard 410c to some of its capabilities as well as some of the Amazon
+  Web Services including IoT.  This example records volume up and volume
+  down buttons and manages an LED.
+
+url:  https://github.com
+baseurl:  /ArrowElectronics/aws-iot-dragonconnect-c
+
+username:  ArrowElectronics
+project:   aws-iot-dragonconnect-c
+
+markdown: redcarpet
+markdown_ext: markdown,mkdown,mkdn,mkd,md
+
+redcarpet:
+  extensions: [ "no_intra_emphasis", "tables", "autolink", "strikethrough", "with_toc_data" ]
+
+highlighter: pygments
+safe: true
+lsi: false
