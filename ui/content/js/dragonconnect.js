@@ -9,7 +9,7 @@ var lInterval;
 const VOLUME_ENDPOINT = '/audio/events';
 const LED_ENDPOINT = '/led';
 
-const LOCAL_VOLUME_ENDPOINT = 'audio.json';
+const LOCAL_VOLUME_ENDPOINT = 'audio2.json';
 const LOCAL_LED_ENDPOINT = 'led.json';
 
 //---------------------------------------
@@ -128,9 +128,14 @@ Array.prototype.has = function(v) {
     uilib.readVolumeData = function(data, txtStatus, jqXHR){
 
        var vUpdate = $('#volume-update');
+       var volObj = null;
 
        try{
-          var volumeEvents = JSON.parse(data);
+         if (DEBUG) {
+            volObj = JSON.parse(data);
+          } else {
+            volObj = data;
+          }
         }
         catch(Err){
           manageCallbackResult($('#volume-update'),'<span class=\"text-warning\">ajax error</span>');
@@ -156,18 +161,25 @@ Array.prototype.has = function(v) {
             numCircs = 7;
         }
 
-        volumes = (volumeEvents.volumes.length > numCircs) ? volumeEvents.volumes.slice(-1*numCircs) : volumeEvents.volumes;
+        //read the volumes
+        var volumeEvents = volObj.events;
 
-        for(var i in volumes) {
-            var item = volumes[i],
+        if(volumeEvents.length > 0){
+          if(volumeEvents.length > numCircs){
+            volumeEvents.slice(-1*numCircs);
+          }
+        }
+
+        for(var i in volumeEvents) {
+            var item = volumeEvents[i],
                     volItem = $('<div class="volume-item"/>'),
                     volCircle = $('<div class="volume-circle text-hide"/>'),
                     volTime = $('<div class="volume-time"/>');
 
             volCircle
-                    .text(item.direction)
-                    .attr('title', item.direction)
-                    .addClass(item.direction == 1 ? 'circle-plus' : 'circle-minus')
+                    .text(item.volume)
+                    .attr('title', item.volume)
+                    .addClass(item.volume == 'increase' ? 'circle-plus' : 'circle-minus')
                     .css('left', circLeftPos)
                     .appendTo(volItem);
 
