@@ -6,11 +6,13 @@ var lInterval;
 //const DB_API = '';
 
 //Create some consts
+const THINGS_ENDPOINT='/things';
 const VOLUME_ENDPOINT = '/audio/events';
 const LED_ENDPOINT = '/led';
 
-const LOCAL_VOLUME_ENDPOINT = 'audio2.json';
+const LOCAL_VOLUME_ENDPOINT = 'audio.json';
 const LOCAL_LED_ENDPOINT = 'led.json';
+const LOCAL_THINGS_ENDPOINT= 'things.json';
 
 //---------------------------------------
 
@@ -39,12 +41,40 @@ Array.prototype.has = function(v) {
 };
 
 //---------------------------------------
+
+/**
+ * extract the key, we assume the key to be constructed using -
+ * @param {string} input - original string
+ * @param {number} idx - index to return, starts at 0
+ */
+function extractKey(input, idx){
+  // console.log('extracting: ' + input);
+  if(input){
+    var sp= input.split('-');
+    if(idx){
+      // console.log('extracted: ' + sp[idx]);
+      return sp[idx];
+    }
+    else{
+      // console.log('extracted: ' + sp[1]);
+      return sp[1];
+    }
+  }
+  return '';
+}
+
+//---------------------------------------
 // UI LIB
 //---------------------------------------
 
 (function (uilib, $, undefined){
 
- uilib.refreshData = function(thingId, dType){
+    /**
+     * main ajax call to refresh data for the panels
+     * @param {string} thingId - thingId in string form
+     * @param {string} dType - type of data to return
+     */
+    uilib.refreshData = function(thingId, dType){
 
       var params={};
   	 	//params.limit=10;
@@ -52,10 +82,10 @@ Array.prototype.has = function(v) {
       var baseUrl=''+DB_API;
 
       if(DEBUG){
-        baseUrl='{1}/{2}';
+        baseUrl='{1}{2}/{3}';
       }
       else{
-        baseUrl+='/things/{1}{2}';
+        baseUrl+='{1}/{2}{3}';
       }
 
       var actionUrl='';
@@ -67,10 +97,10 @@ Array.prototype.has = function(v) {
         if(dType){
           if(dType==='volume'){
             if(DEBUG){
-                 actionUrl = baseUrl.apply(thingId, LOCAL_VOLUME_ENDPOINT);
+                 actionUrl = baseUrl.apply(THINGS_ENDPOINT, thingId, LOCAL_VOLUME_ENDPOINT);
             }
             else{
-                actionUrl = baseUrl.apply(thingId, VOLUME_ENDPOINT);
+                actionUrl = baseUrl.apply(THINGS_ENDPOINT,thingId, VOLUME_ENDPOINT);
             }
             readFn = uilib.readVolumeData;
             alwaysFn = uilib.alwaysVolume;
@@ -81,7 +111,7 @@ Array.prototype.has = function(v) {
                  actionUrl = baseUrl.apply(thingId, LOCAL_LED_ENDPOINT);
             }
             else{
-                 actionUrl = baseUrl.apply(thingId , LED_ENDPOINT);
+                 actionUrl = baseUrl.apply(THINGS_ENDPOINT, thingId , LED_ENDPOINT);
             }
             readFn = uilib.readLedData;
             alwaysFn = uilib.alwaysLed;
@@ -89,17 +119,17 @@ Array.prototype.has = function(v) {
           }
           else{
             //invalid data type
-            console.log('invalid data type');
+            // console.log('invalid data type');
           }
         }
         else{
           //must contain type
-          console.log('no data type');
+          // console.log('no data type');
         }
       }
       else{
         //must have thing id
-        console.log('no thing id');
+        // console.log('no thing id');
       }
 
       //if valid params then make the ajax call
@@ -114,7 +144,7 @@ Array.prototype.has = function(v) {
         })
         .done(readFn)
         .fail(function(data,txtStatus,jqXHR){
-            console.log('fail get' + data + txtStatus);
+            // console.log('fail get' + data + txtStatus);
         })
         .always(alwaysFn);
       }
@@ -123,6 +153,8 @@ Array.prototype.has = function(v) {
 
     };
 
+    //---------------------------------------
+    // VOLUME
     //---------------------------------------
 
     uilib.readVolumeData = function(data, txtStatus, jqXHR){
@@ -209,7 +241,9 @@ Array.prototype.has = function(v) {
         }
     };
 
- //---------------------------------------
+    //---------------------------------------
+    // LED
+    //---------------------------------------
     
     uilib.readLedData = function (data, txtStatus, jqXHR){
         //fill #general-table-rows
@@ -276,6 +310,7 @@ Array.prototype.has = function(v) {
         enableButton(ledOffBtn, enable);
         
     }
+
     //---------------------------------------
     
     uilib.requestLedStateChange = function(thingId, enable){
@@ -284,12 +319,12 @@ Array.prototype.has = function(v) {
         var actionUrl='';
         
         if(DEBUG){
-            baseUrl='{1}/{2}';
-            actionUrl = baseUrl.apply(thingId, LOCAL_LED_ENDPOINT);
+            baseUrl='{1}{2}/{3}';
+            actionUrl = baseUrl.apply(THINGS_ENDPOINT, thingId, LOCAL_LED_ENDPOINT);
         }
         else{
-            baseUrl='{1}/things/{2}{3}';
-            actionUrl = baseUrl.apply(DB_API, LED_THING_ID, '/led');
+            baseUrl='{1}{2}/{3}{4}';
+            actionUrl = baseUrl.apply(DB_API, THINGS_ENDPOINT, thingId, LED_ENDPOINT);
         }
         
         var payloadObj={};
@@ -314,13 +349,97 @@ Array.prototype.has = function(v) {
           data: payload
         })
         .done(function(msg){
-            console.log('sent: ' + payload);
+            // console.log('sent: ' + payload);
         })
         .fail(function(data,txtStatus,jqXHR){
-            console.log('fail post');
+            // console.log('fail post');
         });
     }
 
+    //---------------------------------------
+    // THINGS
+    //---------------------------------------
+    
+    uilib.getThings = function(){
+        
+        var baseUrl='';
+        var actionUrl='';
+        
+        if(DEBUG){
+            baseUrl='{1}/{2}';
+            actionUrl = baseUrl.apply(THINGS_ENDPOINT, LOCAL_THINGS_ENDPOINT);
+        }
+        else{
+            baseUrl='{1}/{2}';
+            actionUrl = baseUrl.apply(DB_API, THINGS_ENDPOINT);
+        }
+
+        $('#menu-select-device').html('<li><a href=\"#\"><img src=\"gfxs/ajax-loader.gif\"/> getting things...</a></li>');
+
+        var jqxhr = $.ajax({
+          url: actionUrl,
+          crossDomain: true,
+          jsonp: false,
+          cache: false,
+          contentType: 'application/json'
+        })
+        .done(uilib.readThingsData)
+        .fail(uilib.alwaysThings);
+    }
+
+    //---------------------------------------
+    
+    uilib.readThingsData = function (data, txtStatus, jqXHR){
+        //fill #menu-select-device
+        var sAlert=$('#status-alert');
+
+        var thingsObj;
+        if (DEBUG) {
+            thingsObj = JSON.parse(data);
+        } else {
+            thingsObj = data;
+        }
+        if(thingsObj){
+          var menuDevices = $('#menu-select-device');
+          var menuContent='';
+          var menuListTemplate='<li><a href=\"#\" id=\"device-{1}\" class=\"btn-device\">{2}</a></li>';
+
+          if(thingsObj.length > 0){
+            for(var i in thingsObj){
+              var aThing = thingsObj[i];
+              var dId = aThing.thingId;
+              if(dId){
+                var aStr = menuListTemplate.apply(dId, dId);
+                menuContent+=aStr;
+              }
+            }
+          }
+
+          menuDevices.html(menuContent);
+
+          manageStatusAlert(sAlert, false, '');
+        }
+        else{
+          manageStatusAlert(sAlert, true, '<span class=\"text-warning\">invalid json</span>');
+        }
+    };
+
+    //---------------------------------------
+
+    uilib.alwaysThings = function(data, txtStatus, jqXHR){
+
+        var sAlert=$('#status-alert');
+
+        if(jqXHR.status === 200){
+          //manageCallbackResult(gUpdate, moment().format('YYYY-MM-DD hh:mm:ss'));
+        }
+        else{
+          manageStatusAlert(sAlert, true, '<span class=\"text-danger\">ajax error : could not get list of devices</span>');
+        }
+    };
+
+    //---------------------------------------
+    // STATUS / CALLBACKS
     //---------------------------------------
 
     function manageCallbackResult(element, message){
@@ -329,48 +448,87 @@ Array.prototype.has = function(v) {
       }
     }
 
+    //---------------------------------------
+
+    function manageStatusAlert(element, enable, message){
+      if(element){
+        if(enable){
+          element.show();
+        }
+        else{
+          element.hide();
+        }
+
+        if(message){
+          element.html(message);
+        }
+      }
+    }
+
 }(window.uilib = window.uilib || {}, $));
 
+//---------------------------------------
+// DOCUMENT READY
 //---------------------------------------
 
 $(document).ready(function() {
 
- //---------------------------------------
- // Set refresh intervals
- //---------------------------------------
-
-  //general
-  gInterval = setInterval(function(){
-    uilib.refreshData(THING_ID,'volume')
-  }, 5000);
-  
-  //led
-  lInterval = setInterval(function(){
-    uilib.refreshData(THING_ID,'led')
-  }, 1000);
-
-  //---------------------------------------
-  //track change with 
   $(document).on('click', '.btn-led-status', function(e){
     var btnId = $(this).attr('id');
 
-    //console.log(btnId);
-
     if(btnId.indexOf('-on') >= 0){
-        //console.log('request on');
+        // console.log('request on');
         //on button
         uilib.requestLedStateChange(THING_ID, true);
     }
     else{
-        //console.log('request off');
+        // console.log('request off');
         //off button
         uilib.requestLedStateChange(THING_ID, false);
     }
     
     return false;
   });
-  
-});
+
+  //---------------------------------------
+
+  $(document).on('click', '#btn-select-device', function(e){
+    //execute ajax to pull in device data
+    uilib.getThings();
+    return false;
+  });
+
+  //---------------------------------------
+
+  $(document).on('click', '.btn-device', function(e){
+     // console.log('btn-device entered');
+     var deviceAgg = $(this).attr('id');
+     //extract the device id and put it into THING_ID
+     var deviceId = extractKey(deviceAgg, 1);
+     if(deviceId){
+        THING_ID = deviceId;
+        //all the other events have to cascade off this choice
+       
+        //reset the intervals
+        clearInterval(vInterval);
+        clearInterval(lInterval);
+
+        //volume
+        vInterval = setInterval(function(){
+          uilib.refreshData(THING_ID,'volume')
+        }, 5000);
+        
+        //led
+        lInterval = setInterval(function(){
+          uilib.refreshData(THING_ID,'led')
+        }, 5000);
+
+        $('#current-thing').html(THING_ID);
+     }
+     return false;
+  });
+
+}); //end document ready
 
 //---------------------------------------
 // HELPER FUNCTIONS
@@ -403,6 +561,11 @@ function prettyPrintEmpty(input){
 
 //---------------------------------------
 
+/**
+ * utility function to enable/disable buttons
+ * @param {object} elem - a jquery selected object
+ * @param {boolean} enable - true to enable, false to disable
+ */
 function enableButton(elem, enable){
     if(elem){
         if(enable){
@@ -423,7 +586,12 @@ function enableButton(elem, enable){
 
 //---------------------------------------
 
-//enable the element to off/on, if writeOff is true, then add the off class
+/**
+ * extension to the previous utility function to enable the element to off/on, if writeOff is true, then add the off class
+ * @param {object} elem - a jquery selected object
+ * @param {boolean} enable - true to enable, false to disable
+ * @param {string} writeOff - the class
+ */
 function enableElement(elem, enable, writeOff){
     
     var OFF_STATUS='off';
@@ -464,7 +632,10 @@ function enableElement(elem, enable, writeOff){
 
 //---------------------------------------
 
-//round to 2 sig digits
+/**
+ * round to 2 significant digits
+ * @param {number} num - the number to round
+ */
 function roundToTwo(num) {
     return +(Math.round(num + "e+2")  + "e-2");
 }
