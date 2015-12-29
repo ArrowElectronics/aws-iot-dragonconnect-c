@@ -108,7 +108,7 @@ function extractKey(input, idx){
           }
           else if(dType==='led'){
             if(DEBUG){
-                 actionUrl = baseUrl.apply(thingId, LOCAL_LED_ENDPOINT);
+                 actionUrl = baseUrl.apply(THINGS_ENDPOINT, thingId, LOCAL_LED_ENDPOINT);
             }
             else{
                  actionUrl = baseUrl.apply(THINGS_ENDPOINT, thingId , LED_ENDPOINT);
