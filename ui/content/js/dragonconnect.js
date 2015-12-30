@@ -108,7 +108,7 @@ function extractKey(input, idx){
           }
           else if(dType==='led'){
             if(DEBUG){
-                 actionUrl = baseUrl.apply(THINGS_ENDPOINT, thingId, LOCAL_LED_ENDPOINT);
+                 actionUrl = baseUrl.apply(thingId, LOCAL_LED_ENDPOINT);
             }
             else{
                  actionUrl = baseUrl.apply(THINGS_ENDPOINT, thingId , LED_ENDPOINT);
@@ -516,12 +516,12 @@ $(document).ready(function() {
         //volume
         vInterval = setInterval(function(){
           uilib.refreshData(THING_ID,'volume')
-        }, 5000);
+        }, VOLUME_REFRESH_INTERVAL);
         
         //led
         lInterval = setInterval(function(){
           uilib.refreshData(THING_ID,'led')
-        }, 5000);
+        }, LED_REFRESH_INTERVAL);
 
         $('#current-thing').html(THING_ID);
      }
