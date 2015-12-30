@@ -6,7 +6,7 @@ var thingsName = 'DragonConnect-things';
 
 module.exports = {
   region: 'us-east-1',
-  accountNumber: 624142053477,
+  accountNumber: 012345678901,
   iam: {
     lambda: {
       roleName: 'DragonConnect-Lambda'
