@@ -2,15 +2,14 @@ swagger: '2.0'
 info:
   title: Arrow DragonConnect
   description: >
-    The DragonConnect example records when a volume up or volume down button is
-    pressed using the _Amazon IoT Message Broker_. In addition, it manages an LED
-    using the _Amazon IoT Device Shadows_.
+    The DragonConnect example records when a volume up or
+    volume down button is pressed using the _Amazon IoT Message
+    Broker_. In addition, it manages an LED using the
+    _Amazon IoT Device Shadows_.
 
-
-
-    The host where the API is deployed is managed by the _Amazon API
-    Gateway_.  The _basePath_ is not defined as the API Gateway will add it as an
-    additional path element.
+    The host where the API is deployed is managed by the
+    _Amazon API Gateway_.  The _basePath_ is not defined as the
+    API Gateway will add it as an additional path element.
   version: 0.1.0
 schemes:
   - https
@@ -157,7 +156,7 @@ paths:
             statusCode: '200'
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-              method.response.header.Access-Control-Allow-Methods: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'GET'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: |
@@ -280,7 +279,7 @@ paths:
             statusCode: '200'
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-              method.response.header.Access-Control-Allow-Methods: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'GET'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: |
@@ -438,7 +437,7 @@ paths:
             statusCode: '200'
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-              method.response.header.Access-Control-Allow-Methods: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'GET'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: |
@@ -561,6 +560,11 @@ paths:
             set the state to that provided.  The thing may set the status.
             Clients will need to retrieve the status using the GET
             method of the resource.
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
         '400':
           $ref: '#/responses/InvalidEntityError'
         '404':
@@ -617,6 +621,9 @@ paths:
                 }
           default:
             statusCode: '202'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: null
     options:
@@ -648,7 +655,7 @@ paths:
             statusCode: '200'
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-              method.response.header.Access-Control-Allow-Methods: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,POST'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: |
