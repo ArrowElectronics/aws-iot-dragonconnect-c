@@ -53,7 +53,7 @@ body {
   color:#373737;
   background: #212121;
   font-size: 16px;
-  font-family: 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -118,7 +118,13 @@ a {
   -ms-transition: text-shadow 0.5s ease;
 }
 
-a:hover, a:focus {text-decoration: underline;}
+a.home {
+  color: #000000
+}
+
+a:hover, a:focus {
+  text-decoration: underline;
+}
 
 footer a {
   color: #F2F2F2;
@@ -149,12 +155,23 @@ img {
 }
 
 p img {
-  display: inline;
-  margin: 0;
+  display: block;
+  margin: auto;
   padding: 0;
   vertical-align: middle;
+  align: center;
   text-align: center;
   border: none;
+}
+
+figure img {
+  display: block;
+  margin: auto;
+}
+
+figure {
+  text-align: center;
+  color: #000000;
 }
 
 pre, code {
@@ -233,6 +250,11 @@ hr {
   background: url('../images/bg_hr.png') repeat-x center;
 }
 
+hr.home {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
 table {
   border: 1px solid #373737;
   margin-bottom: 20px;
@@ -297,6 +319,11 @@ Full-Width Styles
 
 #header_wrap .inner {
   padding: 50px 10px 30px 10px;
+}
+
+#header_wrap .topic {
+  max-height: 10px;
+  padding: 30px 10px 10px 10px;
 }
 
 #project_title {
@@ -368,7 +395,9 @@ Full-Width Styles
   background: #212121;
 }
 
-
+.dragon_font {
+  color: #F73D1F
+}
 
 /*******************************************************************************
 Small Device Styles

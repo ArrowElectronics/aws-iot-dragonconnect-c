@@ -6,6 +6,7 @@ var anchorForId = function (id) {
   anchor.title = "Permalink";
   return anchor;
 };
+
 var linkifyAnchors = function (level, containingElement) {
   var headers = containingElement.getElementsByTagName("h" + level);
   for (var h = 0; h < headers.length; h++) {
@@ -15,6 +16,7 @@ var linkifyAnchors = function (level, containingElement) {
     }
   }
 };
+
 document.onreadystatechange = function () {
   if (this.readyState === "complete") {
     var contentBlock = document.getElementsByClassName("docs")[0] || document.getElementsByClassName("news")[0];

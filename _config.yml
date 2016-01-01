@@ -5,8 +5,7 @@ description: >
   Web Services including IoT.  This example records volume up and volume
   down buttons and manages an LED.
 
-url:  https://github.com
-baseurl:  /ArrowElectronics/aws-iot-dragonconnect-c
+baseurl:  /aws-iot-dragonconnect-c
 
 username:  ArrowElectronics
 project:   aws-iot-dragonconnect-c

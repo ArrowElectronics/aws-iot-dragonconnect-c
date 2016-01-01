@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+  {% include default/head.html %}
+
+  <body>
+
+    {% include topic/header.html %}
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <div class="page-content">
+          <div class="wrapper">
+            {{ content }}
+
+            <hr class="home">
+
+            <a class="home" href="{{ site.baseurl }}/">
+              <figure>
+                <img src="{{ site.baseurl }}/images/home.png" height="50px"/>
+                <figcaption>Home</figcaption>
+              </figure>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    {% include default/footer.html %}
+
+  </body>
+</html>
