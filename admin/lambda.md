@@ -43,7 +43,7 @@ $ aws lambda list-functions \
 
 The create task, in addition to packaging and deploying the Lambda function,
 will also add the appropriate permissions.  The permissions needed by a
-Lambda function are mentioned in the [Detail](#Detail) section.
+Lambda function are mentioned in the [Detail](#detail) section.
 
 ## Update
 
