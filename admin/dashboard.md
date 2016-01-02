@@ -5,12 +5,12 @@ layout: topic
 # Overview
 
 The dashboard is a set of static HTML and JavaScript that use the
-<font class="dragon_font">Dragon</font>Connect API to display the audio
+DragonConnect API to display the audio
 events and manage the LED.
 
 # Create
 
-The URL of the <font class="dragon_font">Dragon</font>Connect API will be of
+The URL of the DragonConnect API will be of
 the form
 
 > https://${rest-api-id}.execute-api.${region}.amazonaws.com/${stage}
@@ -26,13 +26,15 @@ d15bvgy5j2
 ```
 
 With this information, configure the
-<font class="dragon_font">Dragon</font>Connect UI client by setting the
+DragonConnect UI client by setting the
 DB_API variable in the file ui/content/config.js (be sure to set the stage
 to the same value used in the
-<a href="./api.html"><font class="dragon_font">Dragon</font>Connect API</a>
+<a href="./api.html">DragonConnect API</a>
 configuration)
 
-> var DB_API='https://d15bvgy5j2.execute-api.us-east-1.amazonaws.com/dev';
+```js
+var DB_API='https://d15bvgy5j2.execute-api.us-east-1.amazonaws.com/dev';
+```
 
 Once the configuration has set, an Amazon s3 bucket may be used to host the
 client.  The bucket should have a unique name so consider appending your
@@ -46,7 +48,7 @@ Create the bucket using the following command
 $ aws s3 mb s3://dragonconnect-${identifier}
 ```
 
-Copy the <font class="dragon_font">Dragon</font>Connect UI client to the bucket
+Copy the DragonConnect UI client to the bucket
 by issuing the following command
 
 ```sh
@@ -58,7 +60,9 @@ The bucket must now be configured to accept web requests.  This is a two-step
 process which first involves setting a bucket policy.  The prototypical
 bucket policy needs to be modified to use the name of the bucket
 
-> "arn:aws:s3:::dragonconnect-${identifier}/*"
+```json
+"arn:aws:s3:::dragonconnect-${identifier}/*"
+```
 
 Once the bucket name has been set, configure the bucket policy using the
 following command
@@ -76,10 +80,12 @@ $ aws s3 website s3://dragonconnect-${identifier} \
 --index-document index.html
 ```
 
+The DragonConnect dashboard should now be ready to use.
+
 # Delete
 
 The following command will delete the s3 bucket used for the
-<font class="dragon_font">Dragon</font>Connect UI
+DragonConnect UI
 
 ```sh
 $ aws s3 rm -r s3://dragonconnect-${identifier}

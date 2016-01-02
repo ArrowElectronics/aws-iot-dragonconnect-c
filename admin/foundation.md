@@ -3,7 +3,7 @@ layout: topic
 ---
 # Overview
 
-The <font class="dragon_font">Dragon</font>Connect example uses several
+The DragonConnect example uses several
 Amazon services including the _API Gateway_, _Lambda_, _IoT_, and _CloudWatch_.
 Amazon controls access to these services using _Identity and Access Management_
 (IAM).  This step will configure _IAM_ to allow the proper access and
@@ -13,7 +13,7 @@ consider reading the [Details](#details).
 
 # Create Foundational Elements
 
-The <font class="dragon_font">Dragon</font>Connect example includes several
+The DragonConnect example includes several
 utility functions to help manage resources.  The following steps will
 configure the foundational elements
 
@@ -33,7 +33,7 @@ Table DragonConnect-audioEvents created
 
 # Remove Foundational Elements
 
-The <font class="dragon_font">Dragon</font>Connect configuration may be
+The DragonConnect configuration may be
 removed by issuing the following commands
 
 ```sh
@@ -57,7 +57,7 @@ The configuration performed for each of the steps shown in the output of the
 foundation.js script will be examined.  While the foundation.js script
 configures several Amazon services, further configuration is required and
 will be performed by additional
-<font class="dragon_font">Dragon</font>Connect utilities.
+DragonConnect utilities.
 
 The _IAM_ service provides a fine-grain permission model to control access
 to all of the Amazon services.  For more information about _IAM_, please
@@ -181,7 +181,7 @@ $aws/things/+/shadow/update/delta topic.
 ### IoT Topic Rules
 
 A single topic rule is required for the
-<font class="dragon_font">Dragon</font>Connect example.  The topic rule
+DragonConnect example.  The topic rule
 configures the DragonConnect-audioEvents Lambda function to be invoked when
 a message is received on the things/+/audio/events MQTT topic
 

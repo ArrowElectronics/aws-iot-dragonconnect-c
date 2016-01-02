@@ -3,7 +3,7 @@ layout: topic
 ---
 # Overview
 
-The <font class="dragon_font">Dragon</font>Connect example utilizes the
+The DragonConnect example utilizes the
 following Lambda functions written in JavaScript
 
 * DragonConnect-things
@@ -13,12 +13,12 @@ following Lambda functions written in JavaScript
 # Lambda Function Management
 
 Tasks have been defined to create, update, and delete the
-<font class="dragon_font">Dragon</font>Connect Lambda functions.
+DragonConnect Lambda functions.
 
 ## Create
 
 The Lambda functions rely upon the general
-<font class="dragon_font">Dragon</font>Connect configuration and
+DragonConnect configuration and
 <a href="http://gruntjs.com", target="_blank">Grunt</a>,
 a JavaScript Task Runner.  The following steps will deploy the Lambda
 functions
@@ -99,7 +99,7 @@ therefore it is excluded when performing the packaging of the function.
 
 ## Configuration
 
-The <font class="dragon_font">Dragon</font>Connect Lambda functions use the
+The DragonConnect Lambda functions use the
 same configuration of utilizing 1024 MB of memory and a timeout of 5 seconds.
 In addition, each Lambda function is configured to use the DragonConnect-Lambda
 IAM role.

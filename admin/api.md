@@ -3,7 +3,7 @@ layout: topic
 ---
 
 # Overview
-The <font class="dragon_font">Dragon</font>Connect API is defined using
+The DragonConnect API is defined using
 <a href="http://swagger.io" target="_blank">Swagger</a> and configured and
 deployed using the
 <a href="https://github.com/awslabs/aws-apigateway-importer"

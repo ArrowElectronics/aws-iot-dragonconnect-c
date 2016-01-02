@@ -2,9 +2,8 @@
 layout: topic
 ---
 # Introduction
-The <font class="dragon_font">Dragon</font>Connect example includes the ability
-to manage an LED.  You will need the following components to complete the
-circuit
+The DragonConnect example includes the ability to manage an LED.  You will
+need the following components to complete the circuit
 
 * A breadboard
 * Wire
@@ -13,9 +12,8 @@ circuit
 
 ## Circuit
 
-**NOTE:** Please ensure that your <font class="dragon_font">Dragon</font>Board
-is powered off and the power supply has been disconnected from the
-<font class="dragon_font">Dragon</font>Board.  This is a good practice
+**NOTE:** Please ensure that your DragonBoard is powered off and the power
+supply has been disconnected from the DragonBoard.  This is a good practice
 that will help reduce the chances of an accidental short circuit that could
 damage your single board computer.
 
@@ -38,7 +36,7 @@ The LED is managed using the _API Gateway_, _Lambda_, and _IoT_ services and
 is composed of retrieving the status of the device shadow and requesting an
 update of its state.
 
-### Status Retrieval
+### State Retrieval
 Let's begin by understanding how the status of the LED is retrieved.
 The following diagram provides an overview of the status retrieval
 
@@ -117,15 +115,15 @@ When a user selects a state, the following actions occur
     }
     ```
 
-1.  Meanwhile, when the <font class="dragon_font">Dragon</font>Connect client
+1.  Meanwhile, when the DragonConnect client
     starts it subscribes to the topic $aws/things/{thingId}/shadow/update/delta.
     When the desired state is set through the previous step, the _IoT_
     service publishes a method to the aforementioned topic.  The client
     receives the message.
 1.  Once the message has been received, the
-    <font class="dragon_font">Dragon</font>Connect client activates the
-    configured General Purpose IO (GPIO) pin.
-1.  Finally, the <font class="dragon_font">Dragon</font>Connect client
+    DragonConnect client activates or
+    deactivates the configured General Purpose IO (GPIO) pin.
+1.  Finally, the DragonConnect client
     publishes a method to the Device Shadow topic of
     $aws/things/{thingId}/shadow/update as shown in the diagram below
 
