@@ -33,15 +33,17 @@ $ grunt create
 
 When these steps have been completed, the Lambda functions will be
 available for use.  You can check their availability either through the
-AWS console or by using the following command
+AWS console or by using the following command (remember to use a backtick(`)
+around the DragonConnect string)
 
 ```sh
 $ aws lambda list-functions \
 --query 'Functions[?FunctionName.contains(@, `DragonConnect`)]'
 ```
 
-If you choose to use this command, be sure to use a backtick (`) around the
-DragonConnect string.
+The create task, in addition to packaging and deploying the Lambda function,
+will also add the appropriate permissions.  The permissions needed by a
+Lambda function are mentioned in the [Detail](#Detail) section.
 
 ## Update
 
@@ -170,6 +172,16 @@ resource (API Gateway).
 
     The DragonConnect-audioEvents Lambda function enables audio events to
     be created when messages are published to the things/+/audio/events
-    MQTT topic.  This function also enables the following API operation
+    MQTT topic.
+
+    The _IoT_ service does not currently support a role-based
+    permission model.  Instead a resource-based permission must be configured
+    that allows the DragonConnect-audioEvents Lambda function to be invoked.
+    The create task configures this permission.  For more information,
+    see **Create a Rule to Invoke a Lambda Function**
+    of <a href="http://docs.aws.amazon.com/iot/latest/developerguide/config-and-test-rules.html"
+    target="_blank">Configure and Test Rules</a> in the IoT Developer Guide.
+
+    This function also enables the following API operation
 
     * GET /things/{thingId}/audio/events?limit=10

@@ -24,7 +24,7 @@ Table of Contents
     * [Create the Lambda Functions](./admin/lambda.html)
     * [DragonConnect API](./admin/api.html)
     * [DragonConnect Dashboard](./admin/dashboard.html)
-    * Manage Things
+    * [Manage Things](./admin/things.html)
 * Execution
     * Execute the Client
     * Visit the Dashboard
