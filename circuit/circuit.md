@@ -95,8 +95,7 @@ A request to update the state of the LED is made through a web browser when
 a user selects the desired state.  Logic in the web client controls the
 possible selection.  If a device has not reported state, ...
 
-When a user selects a state, the following steps in the following diagram
-occur
+When a user selects a state, the following actions occur
 
 ![DragonBoard LED Update](./images/LED_update.png)
 

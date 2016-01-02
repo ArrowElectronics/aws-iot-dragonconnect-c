@@ -22,8 +22,9 @@ Table of Contents
     * [General Configuration](./admin/general_conf.html)
     * [Foundational Elements](./admin/foundation.html)
     * [Create the Lambda Functions](./admin/lambda.html)
-    * DragonConnect API
-    * DragonConnect Dashboard
+    * [DragonConnect API](./admin/api.html)
+    * [DragonConnect Dashboard](./admin/dashboard.html)
     * Manage Things
 * Execution
     * Execute the Client
+    * Visit the Dashboard

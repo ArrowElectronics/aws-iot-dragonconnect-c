@@ -11,7 +11,7 @@ will also configure elements of _IoT_.  The steps below will get you started
 and if you are curious about what the administration utility does then
 consider reading the [Details](#details).
 
-## Create Foundational Elements
+# Create Foundational Elements
 
 The <font class="dragon_font">Dragon</font>Connect example includes several
 utility functions to help manage resources.  The following steps will
@@ -31,7 +31,7 @@ IoT Topic Rule of DragonConnectAudioEvents created
 Table DragonConnect-audioEvents created
 ```
 
-## Remove Foundational Elements
+# Remove Foundational Elements
 
 The <font class="dragon_font">Dragon</font>Connect configuration may be
 removed by issuing the following commands
@@ -41,7 +41,7 @@ $ cd admin
 $ node lib/foundation.js delete
 ```
 
-## Details
+# Details
 The foundation.js script performs the following functions by Amazon service
 
 * _IAM_
@@ -67,26 +67,9 @@ target="_blank">AWS Identity and Access Management User Guide</a>.
 
 ### API Gateway IAM Role
 
-The DragonConnect-ApiGateway role includes a trust relationship for the
-apigateway.amazonaws.com service.
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "apigateway.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-```
-
-This permits the _API Gateway_ to perform the actions defined by the managed
-and inline policies.
+The DragonConnect-ApiGateway role includes a trust relationship for
+apigateway.amazonaws.com.  This permits the _API Gateway_ to perform the
+actions defined by the managed and inline policies.
 
 * Managed Policies
 
@@ -101,23 +84,7 @@ and inline policies.
 
 ### IoT IAM Role
 
-The DragonConnect-IoT role includes a trust relationship for iot.amazonaws.com
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "iot.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-```
-
+The DragonConnect-IoT role includes a trust relationship for iot.amazonaws.com.
 This permits the _IoT_ service to perform actions defined in the associated
 managed policies of
 
@@ -129,25 +96,8 @@ managed policies of
 ### Lambda IAM Role
 
 The DragonConnect-Lambda role includes a trust relationship for
-lambda.amazonaws.com
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-```
-
-This permits the _Lambda_ service to perform the actions defined in the
-associated policies of
+lambda.amazonaws.com.  This permits the _Lambda_ service to perform the
+actions defined in the associated policies of
 
 * Managed Policies
 
