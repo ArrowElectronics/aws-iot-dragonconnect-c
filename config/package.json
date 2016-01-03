@@ -15,7 +15,7 @@
     "AWSIoT"
   ],
   "author": "Arrow Electronics",
-  "license": "ISC",
+  "license": "Apache",
   "bugs": {
     "url": "https://github.com/arrowelectronics/aws-iot-dragonconnect-c/issues"
   },

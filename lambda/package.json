@@ -15,7 +15,7 @@
     "AWSIoT"
   ],
   "author": "Arrow Electronics",
-  "license": "ISC",
+  "license": "Apache",
   "devDependencies": {
     "chai": "*",
     "chai-as-promised": "*",
