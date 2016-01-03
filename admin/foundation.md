@@ -22,13 +22,6 @@ $ cd admin
 $ npm install ../config
 $ npm install
 $ node lib/foundation.js create
-Role DragonConnect-ApiGateway-59f4 created.
-Role DragonConnect-IoT-59f4 created.
-Role DragonConnect-Lambda-59f4 created.
-Setting the IoT logging options
-IoT Policy of DragonConnect created
-IoT Topic Rule of DragonConnectAudioEvents created
-Table DragonConnect-audioEvents created
 ```
 
 # Remove Foundational Elements
@@ -53,10 +46,9 @@ The foundation.js script performs the following functions by Amazon service
       on MQTT topics
     * Creates a topic rule
 
-The configuration performed for each of the steps shown in the output of the
-foundation.js script will be examined.  While the foundation.js script
-configures several Amazon services, further configuration is required and
-will be performed by additional
+The configuration performed by the foundation.js script will be examined.
+While the foundation.js script configures several Amazon services, further
+configuration is required and will be performed by additional
 DragonConnect utilities.
 
 The _IAM_ service provides a fine-grain permission model to control access

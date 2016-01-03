@@ -18,5 +18,7 @@ DragonConnect example will be
 deployed in the **us-east-1** region then update to entries in the index.js
 configuration file to
 
-> region: 'us-east-1', <br>
-> accountNumber: '012345678901',
+```js
+region: 'us-east-1',
+accountNumber: '012345678901',
+```
