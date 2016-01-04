@@ -196,35 +196,36 @@ function extractKey(input, idx){
         //read the volumes
         var volumeEvents = volObj.events;
 
+        //dont display if no events
         if(volumeEvents.length > 0){
           if(volumeEvents.length > numCircs){
             volumeEvents.slice(-1*numCircs);
           }
-        }
 
-        for(var i in volumeEvents) {
-            var item = volumeEvents[i],
-                    volItem = $('<div class="volume-item"/>'),
-                    volCircle = $('<div class="volume-circle text-hide"/>'),
-                    volTime = $('<div class="volume-time"/>');
+          for(var i in volumeEvents) {
+              var item = volumeEvents[i],
+                      volItem = $('<div class="volume-item"/>'),
+                      volCircle = $('<div class="volume-circle text-hide"/>'),
+                      volTime = $('<div class="volume-time"/>');
 
-            volCircle
-                    .text(item.volume)
-                    .attr('title', item.volume)
-                    .addClass(item.volume == 'increase' ? 'circle-plus' : 'circle-minus')
-                    .css('left', circLeftPos)
-                    .appendTo(volItem);
+              volCircle
+                      .text(item.volume)
+                      .attr('title', item.volume)
+                      .addClass(item.volume == 'increase' ? 'circle-plus' : 'circle-minus')
+                      .css('left', circLeftPos)
+                      .appendTo(volItem);
 
-            volTime
-                    .text(item.timestamp)
-                    .attr('title', item.timestamp)
-                    .css('left', timeLeftPos)
-                    .appendTo(volItem);
+              volTime
+                      .text(item.timestamp)
+                      .attr('title', item.timestamp)
+                      .css('left', timeLeftPos)
+                      .appendTo(volItem);
 
-            volItem.appendTo(volGraph);
+              volItem.appendTo(volGraph);
 
-            circLeftPos += 34;
-            timeLeftPos += 34;
+              circLeftPos += 34;
+              timeLeftPos += 34;
+          }
         }
     };
 
@@ -274,6 +275,9 @@ function extractKey(input, idx){
 
         if(jqXHR.status === 200){
           //manageCallbackResult(gUpdate, moment().format('YYYY-MM-DD hh:mm:ss'));
+        }
+        else if(data.status === 404){
+          manageCallbackResult(gUpdate,'<span class=\"text-warning\">device has yet to report a status</span>');
         }
         else{
           manageCallbackResult(gUpdate,'<span class=\"text-danger\">ajax error</span>');
@@ -524,6 +528,8 @@ $(document).ready(function() {
         }, LED_REFRESH_INTERVAL);
 
         $('#current-thing').html(THING_ID);
+        //reset the menu when we select something
+        $('#btn-select-device').dropdown('toggle');
      }
      return false;
   });
