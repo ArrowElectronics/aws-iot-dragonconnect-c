@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('unitTest', 'Unit tests', [ 'mkdir:test', 'mochaTest:unit' ]);
 
-  grunt.registerMultiTask('package', 'Package the lambda functions', function() {
+  grunt.registerMultiTask('pkg', 'Package the lambda functions', function() {
     var packageTasks = [ 'browserify', 'uglify', 'zip' ];
 
     var multiTasks = [ 'mkdir:package' ];
@@ -23,7 +23,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerMultiTask('create', 'Package and create a lambda function.', function() {
-    var createTasks = [ 'package', 'createMultiTask' ];
+    var createTasks = [ 'pkg', 'createMultiTask' ];
 
     var multiTasks = [];
     createMultiTasks(multiTasks, createTasks, this.target);
@@ -32,13 +32,13 @@ module.exports = function(grunt) {
   });
 
   grunt.registerMultiTask('createMultiTask', 'Create a lambda function', function() {
-    grunt.task.requires('package:' + this.target);
+    grunt.task.requires('pkg:' + this.target);
 
     deploy.create(this.target, this.data, this.async());
   });
 
   grunt.registerMultiTask('update', 'Package and update a lambda function.', function() {
-    var updateTasks = [ 'package', 'updateMultiTask' ];
+    var updateTasks = [ 'pkg', 'updateMultiTask' ];
 
     var multiTasks = [];
     createMultiTasks(multiTasks, updateTasks, this.target);
@@ -47,7 +47,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerMultiTask('updateMultiTask', 'Update a lambda function', function() {
-    grunt.task.requires('package:' + this.target);
+    grunt.task.requires('pkg:' + this.target);
 
     deploy.update(this.target, this.data, this.async());
   });

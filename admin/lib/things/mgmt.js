@@ -28,7 +28,7 @@ function createThing(iot, context) {
     thingName: context.thingId,
     attributePayload: {
       attributes: {
-        reference: 'dragonconnect'
+        reference: 'DragonConnect'
       }
     }
   };

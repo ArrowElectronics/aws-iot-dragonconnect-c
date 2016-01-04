@@ -25,11 +25,11 @@
     <title>Arrow DragonConnect</title>
 </head>
 <body>
-
 <div class="container">
     <h1>Arrow DragonConnect</h1>
     <p><p>The DragonConnect example records when a volume up or volume down button is pressed using the <em>Amazon IoT Message Broker</em>. In addition, it manages an LED using the <em>Amazon IoT Device Shadows</em>.</p>
     <p>The host where the API is deployed is managed by the <em>Amazon API Gateway</em>.  The <em>basePath</em> is not defined as the API Gateway will add it as an additional path element.</p>
+    <p>Several of the error responses are repeated throughout the Swagger definition because of Amazon API Gateway Importer, Issue 117: Responses using $ref not being imported.  Once the root cause of this issue is identified, then references may be used rather than the repeated definition.</p>
     </p>
     
         <div id="sw-default-consumes" class="sw-default-value">
@@ -281,7 +281,6 @@
                                             </div>                </dd>
                                     <dt class="sw-response-500">
                                         500 Internal Server Error
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/UnknownError">#/responses/UnknownError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-500">
@@ -297,7 +296,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;AccessDeniedError:  Please check the permissions needed to perform this function.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;AccessDeniedError:  Please check the permissions needed to perform this function.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -309,6 +308,41 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                             </dl>
                         </section>
@@ -538,7 +572,6 @@
                                             </div>                </dd>
                                     <dt class="sw-response-400">
                                         400 Bad Request
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/InvalidEntityError">#/responses/InvalidEntityError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-400">
@@ -552,7 +585,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;InvalidEntityError: The entity is invalid.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;InvalidEntityError: The entity is invalid.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -564,10 +597,44 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                                     <dt class="sw-response-404">
                                         404 Not Found
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/ResourceNotFoundError">#/responses/ResourceNotFoundError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-404">
@@ -582,7 +649,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -594,10 +661,44 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                                     <dt class="sw-response-500">
                                         500 Internal Server Error
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/UnknownError">#/responses/UnknownError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-500">
@@ -613,7 +714,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;AccessDeniedError:  Please check the permissions needed to perform this function.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;AccessDeniedError:  Please check the permissions needed to perform this function.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -625,6 +726,41 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                             </dl>
                         </section>
@@ -907,7 +1043,6 @@
                                             </div>                </dd>
                                     <dt class="sw-response-404">
                                         404 Not Found
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/ResourceNotFoundError">#/responses/ResourceNotFoundError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-404">
@@ -922,7 +1057,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -934,10 +1069,44 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                                     <dt class="sw-response-500">
                                         500 Internal Server Error
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/UnknownError">#/responses/UnknownError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-500">
@@ -953,7 +1122,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;AccessDeniedError:  Please check the permissions needed to perform this function.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;AccessDeniedError:  Please check the permissions needed to perform this function.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -965,6 +1134,41 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                             </dl>
                         </section>
@@ -1234,7 +1438,6 @@
                                             </div>                </dd>
                                     <dt class="sw-response-400">
                                         400 Bad Request
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/InvalidEntityError">#/responses/InvalidEntityError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-400">
@@ -1248,7 +1451,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;InvalidEntityError: The entity is invalid.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;InvalidEntityError: The entity is invalid.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -1260,10 +1463,44 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                                     <dt class="sw-response-404">
                                         404 Not Found
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/ResourceNotFoundError">#/responses/ResourceNotFoundError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-404">
@@ -1278,7 +1515,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -1290,10 +1527,44 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                                     <dt class="sw-response-500">
                                         500 Internal Server Error
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/UnknownError">#/responses/UnknownError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-500">
@@ -1309,7 +1580,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;AccessDeniedError:  Please check the permissions needed to perform this function.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;AccessDeniedError:  Please check the permissions needed to perform this function.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -1321,6 +1592,41 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                             </dl>
                         </section>
@@ -1559,10 +1865,44 @@
                                                 <div class="col-md-6 sw-response-model">
                                             </div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                                     <dt class="sw-response-400">
                                         400 Bad Request
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/InvalidEntityError">#/responses/InvalidEntityError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-400">
@@ -1576,7 +1916,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;InvalidEntityError: The entity is invalid.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;InvalidEntityError: The entity is invalid.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -1588,10 +1928,44 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                                     <dt class="sw-response-404">
                                         404 Not Found
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/ResourceNotFoundError">#/responses/ResourceNotFoundError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-404">
@@ -1606,7 +1980,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -1618,10 +1992,44 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                                     <dt class="sw-response-500">
                                         500 Internal Server Error
-                                            <span class="swagger--global"></span> <span class="json-schema--reference"><a href="#/responses/UnknownError">#/responses/UnknownError</a></span>
                                     
                                     </dt>
                                     <dd class="sw-response-500">
@@ -1637,7 +2045,7 @@
                                             <div class="row">
                                                     <div class="col-md-6 sw-response-examples">
                                                         <div class="label label-default">Example for application/json</div>
-                                                        <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;AccessDeniedError:  Please check the permissions needed to perform this function.&quot;</span><br></span>}
+                                                        <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  message: &apos;AccessDeniedError:  Please check the permissions needed to perform this function.&apos;\n}\n&quot;</span>
                                             </code></pre>
                                             
                                                     </div>
@@ -1649,6 +2057,41 @@
                                                     </div>
                                                 </div></div>
                                             
+                                                    <div class="col-md-12">
+                                                        <section class="sw-response-headers">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="sw-response-header-name"></th>
+                                                                    <th class="sw-response-header-description"></th>
+                                                                    <th class="sw-response-header-data-type"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                                            <td>
+                                                                                Access-Control-Allow-Headers
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                                            <td>
+                                                                                Access-Control-Allow-Origin
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <span class="json-property-type">string</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </section>
+                                                    </div>
                                             </div>                </dd>
                             </dl>
                         </section>
@@ -1713,7 +2156,7 @@
                 <div class="row">
                         <div class="col-md-6 sw-response-examples">
                             <div class="label label-default">Example for application/json</div>
-                            <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;InvalidEntityError: The entity is invalid.&quot;</span><br></span>}
+                            <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  \&quot;message\&quot;: \&quot;InvalidEntityError: The entity is invalid.\&quot;\n}\n&quot;</span>
                 </code></pre>
                 
                         </div>
@@ -1725,6 +2168,41 @@
                         </div>
                     </div></div>
                 
+                        <div class="col-md-12">
+                            <section class="sw-response-headers">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="sw-response-header-name"></th>
+                                        <th class="sw-response-header-description"></th>
+                                        <th class="sw-response-header-data-type"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                <td>
+                                                    Access-Control-Allow-Headers
+                                                <td></td>
+                                                <td>
+                                                    <span class="json-property-type">string</span>
+                                                    <span class="json-property-range" title="Value limits"></span>
+                                                    
+                                                </td>
+                                            </tr>
+                                            <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                <td>
+                                                    Access-Control-Allow-Origin
+                                                <td></td>
+                                                <td>
+                                                    <span class="json-property-type">string</span>
+                                                    <span class="json-property-range" title="Value limits"></span>
+                                                    
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
                 </div>        </dd>
             <dt><a name=""></a>ResourceNotFoundError</dt>
             <dd>
@@ -1739,7 +2217,7 @@
                 <div class="row">
                         <div class="col-md-6 sw-response-examples">
                             <div class="label label-default">Example for application/json</div>
-                            <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.&quot;</span><br></span>}
+                            <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  \&quot;message\&quot;: \&quot;ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.\&quot;\n}\n&quot;</span>
                 </code></pre>
                 
                         </div>
@@ -1751,6 +2229,41 @@
                         </div>
                     </div></div>
                 
+                        <div class="col-md-12">
+                            <section class="sw-response-headers">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="sw-response-header-name"></th>
+                                        <th class="sw-response-header-description"></th>
+                                        <th class="sw-response-header-data-type"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                <td>
+                                                    Access-Control-Allow-Headers
+                                                <td></td>
+                                                <td>
+                                                    <span class="json-property-type">string</span>
+                                                    <span class="json-property-range" title="Value limits"></span>
+                                                    
+                                                </td>
+                                            </tr>
+                                            <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                <td>
+                                                    Access-Control-Allow-Origin
+                                                <td></td>
+                                                <td>
+                                                    <span class="json-property-type">string</span>
+                                                    <span class="json-property-range" title="Value limits"></span>
+                                                    
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
                 </div>        </dd>
             <dt><a name=""></a>UnknownError</dt>
             <dd>
@@ -1766,7 +2279,7 @@
                 <div class="row">
                         <div class="col-md-6 sw-response-examples">
                             <div class="label label-default">Example for application/json</div>
-                            <pre><code class="lang-json">{<br>    &quot;<span class="hljs-attribute">message</span>&quot;: <span class="hljs-value"><span class="hljs-string">&quot;AccessDeniedError:  Please check the permissions needed to perform this function.&quot;</span><br></span>}
+                            <pre><code class="lang-json"><span class="hljs-string">&quot;{\n  \&quot;message\&quot;: \&quot;AccessDeniedError:  Please check the permissions needed to perform this function.\&quot;\n}\n&quot;</span>
                 </code></pre>
                 
                         </div>
@@ -1778,6 +2291,41 @@
                         </div>
                     </div></div>
                 
+                        <div class="col-md-12">
+                            <section class="sw-response-headers">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="sw-response-header-name"></th>
+                                        <th class="sw-response-header-description"></th>
+                                        <th class="sw-response-header-data-type"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr class="sw-response-header-Access-Control-Allow-Headers">
+                                                <td>
+                                                    Access-Control-Allow-Headers
+                                                <td></td>
+                                                <td>
+                                                    <span class="json-property-type">string</span>
+                                                    <span class="json-property-range" title="Value limits"></span>
+                                                    
+                                                </td>
+                                            </tr>
+                                            <tr class="sw-response-header-Access-Control-Allow-Origin">
+                                                <td>
+                                                    Access-Control-Allow-Origin
+                                                <td></td>
+                                                <td>
+                                                    <span class="json-property-type">string</span>
+                                                    <span class="json-property-range" title="Value limits"></span>
+                                                    
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
                 </div>        </dd>
     </dl>
     
