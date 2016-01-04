@@ -27,7 +27,7 @@ MQTT endpoint.  The endpoint may be configured using the following methods
     If you choose to use a different region, the HostAddress will need to be
     updated.
 
-* Account Endpoing
+* Account Endpoint
 
     The endpoint can be discovered using the following command
 
