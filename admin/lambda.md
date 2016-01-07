@@ -12,13 +12,12 @@ following Lambda functions written in JavaScript
 
 # Lambda Function Management
 
-Tasks have been defined to create, update, and delete the
+The following tasks have been defined to create, update, and delete the
 DragonConnect Lambda functions.
 
 ## Create
 
-The Lambda functions rely upon the general
-DragonConnect configuration and
+The Lambda functions rely upon the general DragonConnect configuration and
 <a href="http://gruntjs.com", target="_blank">Grunt</a>,
 a JavaScript Task Runner.  The NODE_PATH environment variable should be
 set to include the lib directory. This allows multiple modules to work

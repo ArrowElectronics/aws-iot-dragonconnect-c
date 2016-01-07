@@ -39,7 +39,7 @@ client.  The bucket name must adhere to the
 <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html"
 target="_blank">Bucket Restrictions and Limitations</a>.  This includes using
 lowercase names only.  The bucket should have a unique name so consider
-appending your user name to the dragonpulse string
+appending your user name to the dragonconnect string
 
 > dragonconnect-${identifier}
 

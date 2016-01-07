@@ -50,6 +50,19 @@ $ java -jar lib/aws-apigateway-importer.jar --create \
 --deploy dev dragonconnect.yaml
 ```
 
+The following command will validate that the API has been configured and
+deployed to the dev stage (the value of the --deploy parameter used in
+the previous command)
+
+```sh
+$ aws apigateway get-stage --rest-api-id --stage-name dev \
+$(aws apigateway get-rest-apis \
+--query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
+```
+
+The stageName attribute of the result from the above command
+should match "dev".
+
 # Delete
 
 The API Gateway configuration may be deleted through the AWS console or by

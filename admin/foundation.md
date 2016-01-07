@@ -11,7 +11,7 @@ will also configure elements of _IoT_.  The steps below will get you started
 and if you are curious about what the administration utility does then
 consider reading the [Details](#details).
 
-# Create Foundational Elements
+# Create IAM and IoT Elements
 
 The DragonConnect example includes several utility functions to help
 manage resources.  The following steps will configure the required
@@ -24,10 +24,10 @@ $ npm install
 $ node lib/foundation.js create
 ```
 
-# Remove Foundational Elements
+# Remove IAM and IoT Elements
 
-The DragonConnect configuration may be
-removed by issuing the following commands
+The DragonConnect configuration may be removed by issuing the following
+scommands
 
 ```sh
 $ cd admin
@@ -173,8 +173,7 @@ $aws/things/+/shadow/update/delta topic.
 
 ### IoT Topic Rules
 
-A single topic rule is required for the
-DragonConnect example.  The topic rule
+A single topic rule is required for the DragonConnect example.  The topic rule
 configures the DragonConnect-audioEvents Lambda function to be invoked when
 a message is received on the things/+/audio/events MQTT topic
 
