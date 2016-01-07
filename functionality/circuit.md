@@ -2,6 +2,7 @@
 layout: topic
 ---
 # Introduction
+
 The DragonConnect example includes the ability to manage an LED.  You will
 need the following components to complete the circuit
 
@@ -9,23 +10,31 @@ need the following components to complete the circuit
 * Wire
 * LED
 * 50 m&#x2126; resistor
+* A voltage translator such as the
+  <a href="https://www.sparkfun.com/products/11771" target="_blank">SparkFun TXB0104 Level Shifter</a>
 
 ## Circuit
 
-**NOTE:** Please ensure that your DragonBoard is powered off and the power
-supply has been disconnected from the DragonBoard.  This is a good practice
-that will help reduce the chances of an accidental short circuit that could
-damage your single board computer.
+**NOTE:** Please ensure that your DragonBoard&trade; is powered off and
+the power supply has been disconnected from the DragonBoard&trade;.  This
+is a good practice that will help reduce the chances of an accidental
+short circuit that could damage your single board computer.
 
-Follow the steps below to complete the circuit
+The steps below to complete the circuit assume the use of the SparkFun
+TXB0104 Level Shifter.  Depending upon the voltage translator you choose the
+steps may be different
 
-* Connect one end of the wire from the GPIO 12 (positive) position to a row (m)
-  in the breadboard
-* Connect one end of the resistor in the same row as the wire from GPIO 12 (m)
+* Connect one end of the wire from the GPIO 12 (positive) position to the VCCA
+  terminal of the level shifter
+* Connect the VCCB terminal of the level shifter to the red row of the
+  breadboard
+* Connect pin 37 of the GPIO to the red row of the breadboard
+* Connect the red row of the breadboard to one end of the resistor (m)
 * Connect the other end of the resistor to to a different row (n)
 * Connect the anode of the LED in the same row (n)
 * Connect the cathode of the LED to a different row (o)
-* Connect the ground from the GPIO (pin 2) to the row with the LED cathode (o)
+* Connect the row with the LED cathode (o) to the ground of the level shifter
+* Connect the other ground of the level shifter to pin 40 of the GPIO
 
 Your circuit should look similar to the following
 

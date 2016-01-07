@@ -13,9 +13,9 @@ consider reading the [Details](#details).
 
 # Create Foundational Elements
 
-The DragonConnect example includes several
-utility functions to help manage resources.  The following steps will
-configure the foundational elements
+The DragonConnect example includes several utility functions to help
+manage resources.  The following steps will configure the required
+roles and policies
 
 ```sh
 $ cd admin
@@ -35,6 +35,7 @@ $ node lib/foundation.js delete
 ```
 
 # Details
+
 The foundation.js script performs the following functions by Amazon service
 
 * _IAM_

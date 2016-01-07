@@ -20,14 +20,14 @@ DragonConnect Lambda functions.
 The Lambda functions rely upon the general
 DragonConnect configuration and
 <a href="http://gruntjs.com", target="_blank">Grunt</a>,
-a JavaScript Task Runner.    The NODE_PATH enivronment variable should be
-set to include the lib/node_modules of the node installation and the lib
-directory of lambda function.  The following steps will deploy the Lambda
-functions
+a JavaScript Task Runner.  The NODE_PATH environment variable should be
+set to include the lib directory. This allows multiple modules to work
+provided that the script is run from the module root. The following steps
+will deploy the Lambda functions
 
 ```sh
 $ cd lambda
-$ export NODE_PATH=${NODE_HOME}/lib/node_modules:lib
+$ export NODE_PATH=lib
 $ npm install ../config
 $ npm install -g grunt-cli
 $ npm install

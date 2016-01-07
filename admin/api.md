@@ -24,18 +24,18 @@ extension, use the following command (remember to use a backtick (`)
 surrounding the DragonConnect-ApiGateway string)
 
 ```sh
-$ cd api
 $ aws iam list-roles \
 --query 'Roles[?RoleName.contains(@, `DragonConnect-ApiGateway`)].RoleName' \
 --output text
 DragonConnect-ApiGateway-59f4
 ```
 
-With this information, edit the template and replace the account number,
-deployment region, and extension.  If available, you may also choose to use
-an operating system command such as sed
+With this information, edit the template api/dragonconnect-template.yaml,
+and replace the account number, deployment region, and extension.  If
+available, you may also choose to use an operating system command such as sed
 
 ```sh
+$ cd api
 $ sed -e 's/${region}/us-east-1/g' \
 -e 's/${accountNumber}/012345678901/g' \
 -e 's/${ext}/59f4/g' dragonconnect-template.yaml > dragonconnect.yaml
@@ -43,7 +43,7 @@ $ sed -e 's/${region}/us-east-1/g' \
 
 The _API Gateway_ may now be used to create the API and deploy it to a stage.
 The following command deploys the API to the dev stage.  Remember the stage
-name you choose as it will be needed when configuring the dashboard.
+name you choose, as it will be needed when configuring the dashboard.
 
 ```sh
 $ java -jar lib/aws-apigateway-importer.jar --create \
