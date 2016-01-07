@@ -6,7 +6,7 @@ layout: topic
 
 The DragonConnect example will collect and display audio events.
 
-## Audio Event Store
+## Audio Event Storage
 
 When the volume up button or the volume down button is pressed, the client
 application records and stores the event according to the diagram
@@ -23,7 +23,7 @@ The following steps occur when the volume up or volume down button is pressed
 4.  The DragonConnect-audioEvents Lambda function stores the event in the
     DragonConnect-audioEvents DynamoDB table
 
-## Retrieve Audio Events
+## Audio Event Presentation
 
 The dashboard will retrieve and display the _Volume Change Log_.  The
 dashboard polls the DragonConnect API periodically and performs the following
