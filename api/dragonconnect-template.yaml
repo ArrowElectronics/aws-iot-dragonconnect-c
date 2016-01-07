@@ -134,7 +134,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'AccessDeniedError:  Please check the permissions needed to perform this function.'
+                "message": "AccessDeniedError:  Please check the permissions needed to perform this function."
               }
       x-amazon-apigateway-integration:
         type: AWS
@@ -255,7 +255,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'InvalidEntityError: The entity is invalid.'
+                "message": "InvalidEntityError: The entity is invalid."
               }
         '404':
           description: |
@@ -272,7 +272,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.'
+                "message": "ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information."
               }
         '500':
           description: |
@@ -290,7 +290,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'AccessDeniedError:  Please check the permissions needed to perform this function.'
+                "message": "AccessDeniedError:  Please check the permissions needed to perform this function."
               }
       x-amazon-apigateway-integration:
         type: AWS
@@ -471,7 +471,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.'
+                "message": "ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information."
               }
         '500':
           description: |
@@ -489,7 +489,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'AccessDeniedError:  Please check the permissions needed to perform this function.'
+                "message": "AccessDeniedError:  Please check the permissions needed to perform this function."
               }
       x-amazon-apigateway-integration:
         type: AWS
@@ -643,7 +643,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'InvalidEntityError: The entity is invalid.'
+                "message": "InvalidEntityError: The entity is invalid."
               }
         '404':
           description: |
@@ -660,7 +660,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.'
+                "message": "ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information."
               }
         '500':
           description: |
@@ -678,7 +678,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'AccessDeniedError:  Please check the permissions needed to perform this function.'
+                "message": "AccessDeniedError:  Please check the permissions needed to perform this function."
               }
       x-amazon-apigateway-integration:
         type: AWS
@@ -786,7 +786,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'InvalidEntityError: The entity is invalid.'
+                "message": "InvalidEntityError: The entity is invalid."
               }
         '404':
           description: |
@@ -803,7 +803,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information.'
+                "message": "ResourceNotFoundError:  An unknown error occurred, please consult the logs for more information."
               }
         '500':
           description: |
@@ -821,7 +821,7 @@ paths:
           examples:
             application/json: |
               {
-                message: 'AccessDeniedError:  Please check the permissions needed to perform this function.'
+                "message": "AccessDeniedError:  Please check the permissions needed to perform this function."
               }
       x-amazon-apigateway-integration:
         type: AWS
