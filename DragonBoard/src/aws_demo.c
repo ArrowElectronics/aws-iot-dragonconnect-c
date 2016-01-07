@@ -7,6 +7,7 @@
 #include <memory.h>
 #include <sys/time.h>
 #include <limits.h>
+#include <linux/input.h>
 
 #include "glib.h"
 #include "cJSON.h"
@@ -18,9 +19,11 @@
 
 #define MAX_BUF 40
 #define MAX_PAYLOAD 100
+#define VOL_UP_EVENT   "/dev/input/event1"
+#define VOL_DOWN_EVENT "/dev/input/event0"
 
 //Prototypes
-int RegisterGPIOEventHandler(int gpio, GIOFunc  event_fp, void* context);
+int RegisterEventHandler(char *event, GIOFunc  event_fp, void* context);
 gboolean On_VolUp_ButtonPress(GIOChannel *source, GIOCondition condition, gpointer data);
 gboolean On_VolDown_ButtonPress(GIOChannel *source, GIOCondition condition, gpointer data);
 
@@ -28,11 +31,9 @@ gboolean On_VolDown_ButtonPress(GIOChannel *source, GIOCondition condition, gpoi
 int MSG_GetDesiredState( int payload_len, char * payload, bool *des_state);
 int MSG_SetReportedState( int payload_len, char * payload, bool rep_state);
 
-
 //Globals
-
 char certDirectory[PATH_MAX + 1] = "../certs";
-char HostAddress[255] = "data.iot.us-east-1.amazonaws.com";
+char HostAddress[255] = "A1A97Y3SMARFZT.iot.us-east-1.amazonaws.com"; //"data.iot.us-east-1.amazonaws.com";
 uint16_t port = 8883;
 
 char vol_button_topic[]="things/%s/audio/events";
@@ -101,7 +102,7 @@ gboolean timer_func(gpointer user_data)
 	//INFO(".");
 
 	// process mqtt traffic during the main loop
-	iot_mqtt_yield(100);
+	iot_mqtt_yield(10);
 
  	return 1;
 }
@@ -112,7 +113,6 @@ gboolean timer_func(gpointer user_data)
 ********************************************************************************/
 int main(int argc, char** argv)
 {
-
 	IoT_Error_t rc = NONE_ERROR;
 	int32_t i = 0;
 	int ret =0;
@@ -139,15 +139,6 @@ int main(int argc, char** argv)
 	parseInputArgsForConnectParams(argc, argv);
 
 	//
-	//Create the mainloop for polling the GPIO's
-	//
-	loop = g_main_loop_new( 0, 0 );
-	if(!loop) {
-		ERROR("Could not Create Main loop");
-		return -1;
-	}
-
-	//
 	// Get the ThingID/MachineID
 	//
 	thingID = GetMachineID();
@@ -172,14 +163,23 @@ int main(int argc, char** argv)
 	//
 	//Register Event-handler for Vol+/- button
 	//
-	ret = RegisterGPIOEventHandler(107, On_VolUp_ButtonPress, (void*) thingID);
+	ret = RegisterEventHandler(VOL_UP_EVENT, On_VolUp_ButtonPress, (void*) thingID);
 	if (ret != 0) {
 		ERROR("Could not register EventHandler");
 	}
 
-	ret = RegisterGPIOEventHandler(108, On_VolDown_ButtonPress,(void*) thingID);
+	ret = RegisterEventHandler(VOL_DOWN_EVENT, On_VolDown_ButtonPress,(void*) thingID);
 	if (ret != 0) {
 		ERROR("Could not register EventHandler");
+	}
+
+	//
+	//Create the mainloop for polling the button events
+	//
+	loop = g_main_loop_new( NULL, false );
+	if(!loop) {
+		ERROR("Could not Create Main loop");
+		return -1;
 	}
 
 	//
@@ -194,6 +194,7 @@ int main(int argc, char** argv)
 	INFO("rootCA:        %s", rootCA);
 	INFO("clientCRT:     %s", clientCRT);
 	INFO("clientKey:     %s", clientKey);
+
 
 	//
 	// Connect MQTT client
@@ -215,7 +216,8 @@ int main(int argc, char** argv)
 		ERROR("Error[%d] subscribing to topic: %s", rc, led_state_sub_topic);
 	}
 
-	iot_mqtt_yield(1000); 	//TODO: clarify
+
+	//iot_mqtt_yield(1000); 	//TODO: clarify
 
 	//
 	//Hook in  a function into main loop that calls iot_mqtt_yield in regular intervals
@@ -253,27 +255,19 @@ int main(int argc, char** argv)
 *
 *
 ********************************************************************************/
-int RegisterGPIOEventHandler(int gpio, GIOFunc  event_fp, void* context)
+int RegisterEventHandler(char *event, GIOFunc  event_fp, void* context)
 {
-	char buf[MAX_BUF];
-	int fd;
+	GIOChannel *c1=NULL;
 
-	//set the trigger mode
-	sprintf(buf, "/sys/class/gpio/gpio%d/edge", gpio);
-	fd = open( buf, O_WRONLY );
-	if(fd<0)
+	c1 = g_io_channel_new_file(VOL_UP_EVENT, "r", NULL);
+	if(!c1)
 		return -1;
-	write(fd, "both", 4); // set trigger to both
-	close(fd);
 
-	sprintf(buf, "/sys/class/gpio/gpio%d/value", gpio);
-	fd = open( buf, O_RDONLY | O_NONBLOCK );
+	g_io_channel_set_encoding(c1, NULL, NULL);
 
-	GIOChannel* channel = g_io_channel_unix_new( fd );
-
-	GIOCondition cond =  G_IO_PRI ;
-
-	guint id = g_io_add_watch( channel, cond, event_fp, context );
+	//g_io_add_watch(c1, G_IO_IN, event_fp, context);
+	g_io_add_watch_full(c1, G_PRIORITY_HIGH, G_IO_IN, event_fp, context, NULL);
+	return 0;
 }
 
 
@@ -342,14 +336,17 @@ gboolean On_VolUp_ButtonPress(GIOChannel *source, GIOCondition condition, gpoint
 	GError *error=0;
 	char buf[10];
 	char payload[MAX_PAYLOAD];
+	struct input_event event;
 	gsize bytes_read;
 
 	INFO("Vol_Up Button pressed!");
 
+
 	//read and clear the event
 	g_io_channel_seek_position(source, 0, G_SEEK_SET, 0);
-	GIOStatus ret = g_io_channel_read_chars( source, buf, strlen(buf)-1, &bytes_read, &error);
-    //printf("ret:%d,  buf: %s, bytes_read:%d \n", ret, buf, (int) bytes_read);
+	g_io_channel_read_chars(source, (gchar*) &event, sizeof(event), &bytes_read, NULL);
+	if(bytes_read >0)
+	    printf("Event1: keypress value=%x, type=%x, code=%x\n", event.value, event.type, event.code);
 
 	char* thingID = (char*) data;
 	sprintf(payload, "{\n\"timestamp\": \"%lu\", \"volume\": \"%s\" \n}\n", GetTimeSinceEpoch(), "increase");
