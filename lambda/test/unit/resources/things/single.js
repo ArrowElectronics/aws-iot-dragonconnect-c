@@ -53,7 +53,9 @@ describe('retrieve a single thing', function () {
     var listThingsResponse = {
       "things": [
         {
-          "attributes": {},
+          "attributes": {
+            "certificateArn": "arn:aws:iot:us-east-1:012345678901:cert/" + randomString(64, 'hex')
+          },
           "thingName": thingId
         }
       ]
@@ -62,21 +64,6 @@ describe('retrieve a single thing', function () {
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
 
-    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
-    for (var i = 0; i < listThingsResponse.things.length; i++) {
-      var thing = listThingsResponse.things[i];
-
-      listThingPrincipalsStub
-        .withArgs({
-          thingName: thing.thingName
-        })
-        .yields(null, {
-          "principals": [
-            String(randomString(64, 'hex'))
-          ]
-        });
-    }
-
     var message = {
       thingId: thingId
     };
@@ -84,7 +71,6 @@ describe('retrieve a single thing', function () {
     subject(message, context, iot)
       .finally(function() {
           listThingsStub.restore();
-          listThingPrincipalsStub.restore();
         })
       .should.eventually.be.fulfilled
       .and.to.deep.equal(transformAwsThing(listThingsResponse.things[0]))
@@ -106,7 +92,8 @@ describe('retrieve a single thing', function () {
         {
           "attributes": {
             "attr1": uuid.v4(),
-            "attr2": uuid.v4()
+            "attr2": uuid.v4(),
+            "certificateArn": "arn:aws:iot:us-east-1:012345678901:cert/" + randomString(64, 'hex')
           },
           "thingName": thingId
         }
@@ -116,21 +103,6 @@ describe('retrieve a single thing', function () {
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
 
-    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
-    for (var i = 0; i < listThingsResponse.things.length; i++) {
-      var thing = listThingsResponse.things[i];
-
-      listThingPrincipalsStub
-        .withArgs({
-          thingName: thing.thingName
-        })
-        .yields(null, {
-          "principals": [
-            String(randomString(64, 'hex'))
-          ]
-        });
-    }
-
     var message = {
       thingId: thingId
     };
@@ -138,7 +110,6 @@ describe('retrieve a single thing', function () {
     subject(message, context, iot)
       .finally(function() {
         listThingsStub.restore();
-        listThingPrincipalsStub.restore();
       })
       .should.eventually.be.fulfilled
       .and.to.deep.equal(transformAwsThing(listThingsResponse.things[0]))

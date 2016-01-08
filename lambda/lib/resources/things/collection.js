@@ -7,34 +7,6 @@ var errors = require('./../../error'),
     AccessDeniedError = errors.AccessDeniedError,
     UnknownError = errors.UnknownError;
 
-function thingPrincipalFilter(thing, context, iot) {
-  var methodName = 'collection#thingPrincipalFilter()';
-
-  var params = {
-    thingName: thing.thingName
-  };
-
-  var iotListThingPrincipals = Bluebird.promisify(iot.listThingPrincipals, { context: iot });
-  return Bluebird.resolve()
-    .then(function() {
-        return iotListThingPrincipals(params)
-      })
-    .then(function(result) {
-      var returnValue = false;
-
-      if (result && result.hasOwnProperty('principals')) {
-        var principals = result.principals;
-        if (Array.isArray(principals) && principals.length > 0) {
-          returnValue = true;
-        }
-      }
-
-      context.logger.info({ thing: thing, principals: result, returnValue: returnValue }, methodName);
-
-      return returnValue;
-    });
-}
-
 function transformResponse(things, context) {
   var returnValue = [];
 
@@ -42,18 +14,11 @@ function transformResponse(things, context) {
     for (var i = 0; i < things.length; i++) {
       var thing = things[i];
 
-      var entity = {
-        thingId: thing.thingName
-      };
-
-      if (thing.hasOwnProperty('attributes')) {
-        var attributes = thing.attributes;
-        if (Object.keys(attributes).length > 0) {
-          entity.attributes = deepcopy(thing.attributes);
-        }
-      }
-
-      returnValue.push(entity);
+      var attributes = thing.attributes;
+      returnValue.push({
+        thingId: thing.thingName,
+        attributes: deepcopy(thing.attributes)
+      });
     }
   }
   context.logger.info({ things: things, response: returnValue }, 'collection#transformResponse()');
@@ -89,12 +54,10 @@ var retrieveThings = function(message, context, iot) {
 
   return iotListThings(message)
     .then(function(thingList) {
-        context.logger.info( { thingList: thingList }, methodName);
-
         return thingList.things;
       })
     .filter(function(thing) {
-        return thingPrincipalFilter(thing, context, iot);
+        return thing.attributes.hasOwnProperty('certificateArn');
       })
     .then(function(result) {
         return transformResponse(result, context);

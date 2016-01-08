@@ -5,11 +5,15 @@ var program = require('commander'),
 
 var db = require('./foundation/db'),
     iam = require('./foundation/iam'),
-    iot = require('./foundation/iot');
+    iot = require('./foundation/iot'),
+    things = require('./foundation/things');
 
 function manage(action) {
   // IAM must be configured before IoT as the IoT logging options requires the DragonConnect-IoT role ARN
   Bluebird.try(function() {
+        return things(action);
+      })
+    .then(function() {
         return iam(action);
       })
     .then(function() {

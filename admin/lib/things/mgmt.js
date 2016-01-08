@@ -151,12 +151,26 @@ function attachPolicyToPrincipal(iot, thing) {
       });
 }
 
+function validatePolicy(iot) {
+  var awsGetPolicy = Bluebird.promisify(iot.getPolicy, { context: iot });
+
+  return awsGetPolicy({
+        policyName: config.iot.policies.DragonConnectThing
+      })
+    .catch(function(err) {
+        throw new TypeError('Policy ' + config.iot.policies.DragonConnectThing + ' must exist before creating a thing');
+      })
+}
+
 function createResources(context) {
   configureAws(AWS);
 
   var iot = new AWS.Iot();
 
-  return getOrCreateThing(iot, context)
+  return  validatePolicy(iot)
+    .then(function() {
+        return getOrCreateThing(iot, context)
+      })
     .then(function(thing) {
         return attachPolicyToPrincipal(iot, thing);
       })
