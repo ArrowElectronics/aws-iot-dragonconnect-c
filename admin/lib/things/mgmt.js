@@ -159,7 +159,7 @@ function validatePolicy(iot) {
       })
     .catch(function(err) {
         throw new TypeError('Policy ' + config.iot.policies.DragonConnectThing + ' must exist before creating a thing');
-      })
+      });
 }
 
 function createResources(context) {
@@ -167,7 +167,7 @@ function createResources(context) {
 
   var iot = new AWS.Iot();
 
-  return  validatePolicy(iot)
+  return validatePolicy(iot)
     .then(function() {
         return getOrCreateThing(iot, context)
       })
