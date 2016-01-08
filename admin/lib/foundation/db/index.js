@@ -71,8 +71,6 @@ function createResources(context) {
 }
 
 function deleteTable(dynamoDb, table) {
-  console.info('Deleting table ' + table.name);
-
   var awsDeleteTable = Bluebird.promisify(dynamoDb.deleteTable, { context: dynamoDb });
 
   var params = {
@@ -80,6 +78,9 @@ function deleteTable(dynamoDb, table) {
   };
 
   return awsDeleteTable(params)
+    .then(function() {
+        console.info('Deleting table ' + table.name);
+      })
     .catch(function(err) {
       if (err.code !== 'ResourceNotFoundException') {
         throw err;

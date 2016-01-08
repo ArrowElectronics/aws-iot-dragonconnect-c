@@ -6,6 +6,7 @@ var fs = require('fs'),
 var AWS = require('aws-sdk'),
     Bluebird = require('bluebird'),
     mkdirp = require('mkdirp'),
+    homedir = require('home-dir'),
     rimraf = require('rimraf');
 
 var config = require('dragonconnect-config'),
@@ -18,7 +19,7 @@ var KEYS_AND_CERTIFICATES_FILE_NAME = 'certificatesAndKeys.json';
 var RESOURCE_NOT_FOUND_ERROR = 'ResourceNotFoundError';
 
 function getRegistry(thingId) {
-  return path.join(path.relative(process.cwd(), path.dirname(module.filename)), REGISTRY_BASE, thingId);
+  return path.join(homedir(), config.admin.registry, thingId);
 }
 
 function getThing(iot, context) {

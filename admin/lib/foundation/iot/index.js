@@ -137,12 +137,13 @@ function deletePolicy(iot, policyRef) {
     throw new TypeError('Invalid configuration for iot.policies as ' + policyName + ' is not defined.');
   }
 
-  console.info('Deleting IoT policy for ' + policyName);
-
   var awsDeletePolicy = Bluebird.promisify(iot.deletePolicy, { context: iot });
 
   return awsDeletePolicy({
         policyName: policyName
+      })
+    .then(function() {
+        console.info('Deleting IoT policy for ' + policyName);
       })
     .catch(function(err) {
         if (err.code !== 'ResourceNotFoundException') {
@@ -157,12 +158,13 @@ function deleteTopic(iot, topicRuleRef) {
     throw new TypeError('Invalid configuration for iot.topics as ' + topicRuleRef + ' is not defined.');
   }
 
-  console.info ('Deleting IoT topic rule for ' + ruleName);
-
   var awsDeleteTopicRule = Bluebird.promisify(iot.deleteTopicRule, { context: iot });
 
   return awsDeleteTopicRule({
         ruleName: ruleName
+      })
+    .then(function() {
+        console.info ('Deleting IoT topic rule for ' + ruleName);
       })
     .catch(function(err) {
         // The AWS service throws an unauthorized exception rather than a resource not found exception
