@@ -6,8 +6,10 @@ var AWS = require('aws-sdk'),
 var tables = require('./tables'),
     configureAws = require('./../../util/helper').configureAws;
 
-function createTable(method, table) {
+function createTable(dynamoDb, table) {
   console.info('Creating table ' + table.name);
+
+  var awsCreateTable = Bluebird.promisify(dynamoDb.createTable, { context: dynamoDb });
 
   var params = {
     TableName: table.name,
@@ -42,7 +44,7 @@ function createTable(method, table) {
     );
   }
 
-  return method(params);
+  return awsCreateTable(params);
 }
 
 function createResources(context) {
@@ -50,44 +52,48 @@ function createResources(context) {
 
   var dynamoDb = new AWS.DynamoDB();
   var awsDescribeTable = Bluebird.promisify(dynamoDb.describeTable, { context: dynamoDb });
-  var awsCreateTable = Bluebird.promisify(dynamoDb.createTable, { context: dynamoDb });
 
   return Bluebird.each(tables, function(table) {
-      return Bluebird.resolve()
-        .then(function() {
-            return awsDescribeTable({ TableName: table.name });
-          })
+    return awsDescribeTable({ TableName: table.name })
         .then(function(tableDescription) {
             console.info('Table ' + table.name + ' already exists');
           })
         .catch(function(err) {
             switch(err.statusCode) {
               case 400: {
-                return createTable(awsCreateTable, table);
+                return createTable(dynamoDb, table);
               }
             }
+
+            throw err;
           });
     });
 }
 
-function deleteTable(method, table) {
+function deleteTable(dynamoDb, table) {
   console.info('Deleting table ' + table.name);
+
+  var awsDeleteTable = Bluebird.promisify(dynamoDb.deleteTable, { context: dynamoDb });
 
   var params = {
     TableName: table.name
   };
 
-  return method(params);
+  return awsDeleteTable(params)
+    .catch(function(err) {
+      if (err.code !== 'ResourceNotFoundException') {
+        throw err;
+      }
+    });
 }
 
 function deleteResources(context) {
   configureAws(AWS);
 
   var dynamoDb = new AWS.DynamoDB();
-  var awsDeleteTable = Bluebird.promisify(dynamoDb.deleteTable, { context: dynamoDb });
 
   return Bluebird.each(tables, function(table) {
-        deleteTable(awsDeleteTable, table);
+        deleteTable(dynamoDb, table);
       })
     .catch(function(err) {
         throw err;

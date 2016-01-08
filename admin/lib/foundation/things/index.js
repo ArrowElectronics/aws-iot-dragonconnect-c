@@ -8,7 +8,7 @@ function isPolicyApplicable(iot, thing) {
   var iotListPrincipalPolicies = Bluebird.promisify(iot.listPrincipalPolicies, { context: iot });
 
   return iotListPrincipalPolicies({
-        principal: thing.attributes.certificateArn
+        principal: thing.principal
       })
     .then(function(result) {
         var returnValue = false;
@@ -30,13 +30,37 @@ function isPolicyApplicable(iot, thing) {
 }
 
 function detachPrincipal(iot, thing) {
-  console.info('Detaching thing ' + thing.thingName + ' from policy ' + config.iot.policies.DragonConnectThing);
+  console.info('Detaching thing ' + thing.thingId + ' from policy ' + config.iot.policies.DragonConnectThing);
 
   var iotDetachPrincipalPolicy = Bluebird.promisify(iot.detachPrincipalPolicy, { context: iot });
 
   return iotDetachPrincipalPolicy({
         policyName: config.iot.policies.DragonConnectThing,
-        principal: thing.attributes.certificateArn
+        principal: thing.principal
+      })
+    .catch(function(err) {
+        throw err;
+      });
+}
+
+function associatePrincipal(iot, thing) {
+  var iotListThingPrincipals = Bluebird.promisify(iot.listThingPrincipals, { context: iot });
+
+  return iotListThingPrincipals({
+        thingName: thing.thingName
+      })
+    .then(function(result) {
+        var returnValue = {
+          thingId: thing.thingName,
+          attributes: thing.attributes
+        };
+
+        var principals = result.principals;
+        if (principals.length > 0) {
+          returnValue.principal = principals[0];
+        }
+
+        return returnValue;
       })
     .catch(function(err) {
         throw err;
@@ -54,8 +78,11 @@ function cleanup() {
     .then(function(thingList) {
         return thingList.things;
       })
+    .map(function(thing) {
+        return associatePrincipal(iot, thing);
+      })
     .filter(function(thing) {
-        return thing.attributes.hasOwnProperty('certificateArn');
+        return thing.hasOwnProperty('principal');
       })
     .filter(function(thing) {
         return isPolicyApplicable(iot, thing);

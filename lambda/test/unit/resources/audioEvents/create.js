@@ -83,10 +83,8 @@ describe('creating an audioEvent', function() {
     var listThingsResponse = {
       "things": [
         {
-          "thingName": thingId,
-          "attributes": {
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:cert/" + randomString(64, 'hex')
-          }
+          "attributes": {},
+          "thingName": thingId
         }
       ]
     };
@@ -96,6 +94,14 @@ describe('creating an audioEvent', function() {
     var iot = new AWS.Iot();
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
+
+    var listThingPrincipalsResponse = {
+      "principals": [
+        String(randomString(64, 'hex'))
+      ]
+    };
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    listThingPrincipalsStub.yields(null, listThingPrincipalsResponse);
 
     var dynamoDb = new dynamoDoc.DynamoDB();
     var putItemStub = sinon.stub(dynamoDb, 'putItem');
@@ -117,6 +123,7 @@ describe('creating an audioEvent', function() {
         })
       .finally(function() {
           listThingsStub.restore();
+          listThingPrincipalsStub.restore();
           putItemStub.restore();
         })
       .should.eventually.be.fulfilled

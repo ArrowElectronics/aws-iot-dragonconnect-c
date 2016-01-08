@@ -53,9 +53,7 @@ describe('updating a thing', function () {
     var listThingsResponse = {
       "things": [
         {
-          "attributes": {
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:cert/" + randomString(64, 'hex')
-          },
+          "attributes": {},
           "thingName": uuid.v4()
         }
       ]
@@ -66,6 +64,21 @@ describe('updating a thing', function () {
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
 
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    for (var i = 0; i < listThingsResponse.things.length; i++) {
+      var thing = listThingsResponse.things[i];
+
+      listThingPrincipalsStub
+        .withArgs({
+            thingName: thing.thingName
+          })
+        .yields(null, {
+            "principals": [
+              String(randomString(64, 'hex'))
+            ]
+          });
+    }
+
     var message = {
       thingId: uuid.v4(),
       attributes: {}
@@ -74,12 +87,13 @@ describe('updating a thing', function () {
     subject(message, context, iot)
       .finally(function() {
           listThingsStub.restore();
+          listThingPrincipalsStub.restore();
         })
       .should.eventually.be.rejectedWith(/^ResourceNotFoundError/)
       .and.notify(done);
   });
 
-  it('with a name and require attribute should be updated', function (done) {
+  it('with a name and no attributes should be updated', function (done) {
     var self = this;
     var testName = self.test.fullTitle();
 
@@ -92,9 +106,7 @@ describe('updating a thing', function () {
     var listThingsResponse = {
       "things": [
         {
-          "attributes": {
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:cert/" + randomString(64, 'hex')
-          },
+          "attributes": {},
           "thingName": thingId
         }
       ]
@@ -102,6 +114,21 @@ describe('updating a thing', function () {
 
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
+
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    for (var i = 0; i < listThingsResponse.things.length; i++) {
+      var thing = listThingsResponse.things[i];
+
+      listThingPrincipalsStub
+        .withArgs({
+            thingName: thing.thingName
+          })
+        .yields(null, {
+            "principals": [
+              String(randomString(64, 'hex'))
+            ]
+          });
+    }
 
     var updateThingsStub = sinon.stub(iot, 'updateThing');
     updateThingsStub.yields(null, {});
@@ -112,6 +139,7 @@ describe('updating a thing', function () {
     subject(message, context, iot)
       .finally(function() {
           listThingsStub.restore();
+          listThingPrincipalsStub.restore();
           updateThingsStub.restore();
         })
       .should.eventually.be.fulfilled
@@ -134,8 +162,7 @@ describe('updating a thing', function () {
         {
           "attributes": {
             "attr1": "val1",
-            "attr2": "val2",
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:cert/" + randomString(64, 'hex')
+            "attr2": "val2"
           },
           "thingName": thingId
         }
@@ -144,6 +171,21 @@ describe('updating a thing', function () {
 
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
+
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    for (var i = 0; i < listThingsResponse.things.length; i++) {
+      var thing = listThingsResponse.things[i];
+
+      listThingPrincipalsStub
+        .withArgs({
+            thingName: thing.thingName
+          })
+        .yields(null, {
+            "principals": [
+              String(randomString(64, 'hex'))
+            ]
+          });
+    }
 
     var updateThingsStub = sinon.stub(iot, 'updateThing');
     updateThingsStub.yields(null, {});
@@ -154,6 +196,7 @@ describe('updating a thing', function () {
     subject(message, context, iot)
       .finally(function() {
         listThingsStub.restore();
+        listThingPrincipalsStub.restore();
         updateThingsStub.restore();
       })
       .should.eventually.be.fulfilled

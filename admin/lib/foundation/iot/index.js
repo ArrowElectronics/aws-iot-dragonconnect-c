@@ -141,11 +141,13 @@ function deletePolicy(iot, policyRef) {
 
   var awsDeletePolicy = Bluebird.promisify(iot.deletePolicy, { context: iot });
 
-  return Bluebird.resolve()
-    .then(function() {
-        awsDeletePolicy({
-          policyName: policyName
-        });
+  return awsDeletePolicy({
+        policyName: policyName
+      })
+    .catch(function(err) {
+        if (err.code !== 'ResourceNotFoundException') {
+          throw err;
+        }
       });
 }
 
@@ -159,11 +161,14 @@ function deleteTopic(iot, topicRuleRef) {
 
   var awsDeleteTopicRule = Bluebird.promisify(iot.deleteTopicRule, { context: iot });
 
-  return Bluebird.resolve()
-    .then(function() {
-        awsDeleteTopicRule({
-          ruleName: ruleName
-        });
+  return awsDeleteTopicRule({
+        ruleName: ruleName
+      })
+    .catch(function(err) {
+        // The AWS service throws an unauthorized exception rather than a resource not found exception
+        if (err.code !== 'UnauthorizedException') {
+          throw err;
+        }
       });
 }
 
@@ -174,15 +179,15 @@ function deleteResources(context) {
 
   return Bluebird.resolve()
     .then(function() {
-      Bluebird.each(Object.keys(policies), function (policyRef) {
-        return deletePolicy(iot, policyRef);
+        Bluebird.each(Object.keys(policies), function (policyRef) {
+          return deletePolicy(iot, policyRef);
+        })
       })
-    })
     .then(function() {
-      Bluebird.each(Object.keys(topicRules), function(topicRuleRef) {
-        return deleteTopic(iot, topicRuleRef);
-      })
-    });
+        Bluebird.each(Object.keys(topicRules), function(topicRuleRef) {
+          return deleteTopic(iot, topicRuleRef);
+        })
+      });
 }
 
 var manage = function(cmd) {

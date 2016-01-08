@@ -29,8 +29,7 @@ describe('updating the led status', function() {
     var listThingsResponse = {
       "things": [
         {
-          "attributes": {
-          },
+          "attributes": {},
           "thingName": thingId
         }
       ]
@@ -38,6 +37,13 @@ describe('updating the led status', function() {
     var iot = new AWS.Iot();
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
+
+    var listThingPrincipalsResponse = {
+      "principals": [
+      ]
+    };
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    listThingPrincipalsStub.yields(null, listThingPrincipalsResponse);
 
     var iotData = new AWS.IotData({ endpoint: 'data.iot.us-east-1.amazonaws.com' });
     var updateThingShadowStub = sinon.stub(iotData, 'updateThingShadow');
@@ -56,6 +62,7 @@ describe('updating the led status', function() {
         })
       .finally(function() {
           listThingsStub.restore();
+          listThingPrincipalsStub.restore();
           updateThingShadowStub.restore();
         })
       .should.eventually.be.rejectedWith(/^ResourceNotFoundError/)
@@ -72,9 +79,7 @@ describe('updating the led status', function() {
     var listThingsResponse = {
       "things": [
         {
-          "attributes": {
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:cert/" + randomString(64, 'hex')
-          },
+          "attributes": {},
           "thingName": thingId
         }
       ]
@@ -82,6 +87,14 @@ describe('updating the led status', function() {
     var iot = new AWS.Iot();
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
+
+    var listThingPrincipalsResponse = {
+      "principals": [
+        String(randomString(64, 'hex'))
+      ]
+    };
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    listThingPrincipalsStub.yields(null, listThingPrincipalsResponse);
 
     var timestamp = Math.floor(new Date().getTime() / 1000);
     var stateDocument = {
@@ -129,6 +142,7 @@ describe('updating the led status', function() {
         })
       .finally(function() {
           listThingsStub.restore();
+          listThingPrincipalsStub.restore();
           updateThingShadowStub.restore();
         })
       .should.eventually.be.fulfilled
@@ -146,9 +160,7 @@ describe('updating the led status', function() {
     var listThingsResponse = {
       "things": [
         {
-          "attributes": {
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:cert/" + randomString(64, 'hex')
-          },
+          "attributes": {},
           "thingName": thingId
         }
       ]
@@ -156,6 +168,14 @@ describe('updating the led status', function() {
     var iot = new AWS.Iot();
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
+
+    var listThingPrincipalsResponse = {
+      "principals": [
+        String(randomString(64, 'hex'))
+      ]
+    };
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    listThingPrincipalsStub.yields(null, listThingPrincipalsResponse);
 
     var timestamp = Math.floor(new Date().getTime() / 1000);
     var stateDocument = {
@@ -208,6 +228,7 @@ describe('updating the led status', function() {
         })
       .finally(function() {
           listThingsStub.restore();
+          listThingPrincipalsStub.restore();
           updateThingShadowStub.restore();
         })
       .should.eventually.be.fulfilled

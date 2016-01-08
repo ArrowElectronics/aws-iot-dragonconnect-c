@@ -182,36 +182,36 @@ function deleteResources() {
   if (DYNAMIC_ROLE) {
     var dynamicRoleHelper = new DynamicRoleHelper(iam);
 
-    return Bluebird.resolve()
-      .then(function () {
-          return Bluebird.each(Object.keys(roles), function(roleRef) {
-            var role = roles[roleRef];
-            var roleName = config['iam'][roleRef]['roleName'];
+    return Bluebird.each(Object.keys(roles), function(roleRef) {
+        var role = roles[roleRef];
+        var roleName = config['iam'][roleRef]['roleName'];
 
-            return Bluebird.resolve()
-              .then(function() {
-                  return Bluebird.try(function() {
-                        return dynamicRoleHelper.findRole(roleName);
-                      })
-                    .then(function(existingRole) {
-                        if (existingRole) {
-                          role.name = roleName;
-                          role.alias = existingRole.RoleName;
+        return Bluebird.resolve()
+          .then(function() {
+              return Bluebird.try(function() {
+                    return dynamicRoleHelper.findRole(roleName);
+                  })
+                .then(function(existingRole) {
+                    if (existingRole) {
+                      role.name = roleName;
+                      role.alias = existingRole.RoleName;
 
-                          return deleteRole(iam, role);
-                        }
-                      });
-                });
-          });
-        });
+                      return deleteRole(iam, role);
+                    }
+                  })
+                .catch(function(err) {
+                    throw err;
+                  });
+            });
+      });
   } else {
     return Bluebird.each(Object.keys(roles), function(roleRef) {
-      var role = roles[roleRef];
-      role.name = config['iam'][roleRef]['roleName'];
-      role.alias = role.name;
+        var role = roles[roleRef];
+        role.name = config['iam'][roleRef]['roleName'];
+        role.alias = role.name;
 
-      return deleteRole(iam, role);
-    })
+        return deleteRole(iam, role);
+      });
   }
 }
 

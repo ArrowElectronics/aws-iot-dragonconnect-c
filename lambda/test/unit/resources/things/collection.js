@@ -90,6 +90,68 @@ describe('retrieve a collection of things', function () {
         .should.be.rejectedWith(/^AccessDeniedError/)
         .and.notify(done);
     });
+
+    it('for listThingPrincipals', function(done) {
+      var self = this;
+      var testName = self.test.fullTitle();
+
+      context.logger.info(testName);
+
+      var thingId = 'listThingPrincipalsPermission';
+
+      var iot = new AWS.Iot();
+
+      var listThingsResult = {
+        "things": [
+          {
+            "attributes": {
+              "attr": "val"
+            },
+            "thingName": "test"
+          },
+          {
+            "attributes": {},
+            "thingName": "led"
+          }
+        ]
+      };
+
+      var listThingsStub = sinon.stub(iot, 'listThings');
+      listThingsStub.yields(null, listThingsResult);
+
+      var detail = {
+        cause: {
+          message: 'User: arn:aws:sts::012345678901:assumed-role/lambdaFunction is not authorized to perform: iot:ListThingPrinciples on resource: arn:aws:iot:us-east-1:012345678901:thing/' + thingId,
+          code: 'AccessDeniedException',
+          statusCode: 403,
+          retryable: false,
+          retryDelay: 30
+        },
+        code: 'AccessDeniedException',
+        statusCode: 403,
+        retryable: false,
+        retryDelay: 30
+      };
+
+      var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+      listThingPrincipalsStub.throws(AWS.util.error(new Error(), detail));
+
+      var message = {
+      };
+
+      subject(message, context, iot)
+        .catch(function(err) {
+          context.logger.error({ error: err }, testName);
+
+          throw err;
+        })
+        .finally(function() {
+          listThingsStub.restore();
+          listThingPrincipalsStub.restore();
+        })
+        .should.be.rejectedWith(/^AccessDeniedError/)
+        .and.notify(done);
+    });
   });
 
  it('where all things have no associated principals', function(done) {
@@ -118,12 +180,26 @@ describe('retrieve a collection of things', function () {
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
 
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    for (var i = 0; i < listThingsResponse.things.length; i++) {
+      var thing = listThingsResponse.things[i];
+
+      listThingPrincipalsStub
+        .withArgs({
+            thingName: thing.thingName
+          })
+        .yields(null, {
+            "principals": []
+          });
+    }
+
     var message = {};
 
     subject(message, context, iot)
       .finally(function() {
-        listThingsStub.restore();
-      })
+          listThingsStub.restore();
+          listThingPrincipalsStub.restore();
+        })
       .should.eventually.be.fulfilled
       .and.to.deep.equal([])
       .and.notify(done);
@@ -139,17 +215,12 @@ describe('retrieve a collection of things', function () {
       "things": [
         {
           "attributes": {
-            "attr": "val",
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:" +
-              "cert/3fae83d5e7447929b198a10d1d2e75cb4b9f99407e41b85748de1d91c340753d"
+            "attr": "val"
           },
           "thingName": "test"
         },
         {
-          "attributes": {
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:" +
-              "cert/d327dab8a3f4e386854a5eb338ce550b284a7b3e3c90ac7cd7e75961e0a1bda8"
-          },
+          "attributes": {},
           "thingName": "led"
         }
       ]
@@ -160,11 +231,27 @@ describe('retrieve a collection of things', function () {
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
 
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    for (var i = 0; i < listThingsResponse.things.length; i++) {
+      var thing = listThingsResponse.things[i];
+
+      listThingPrincipalsStub
+        .withArgs({
+            thingName: thing.thingName
+          })
+        .yields(null, {
+            "principals": [
+              String(randomString(64, 'hex'))
+            ]
+          });
+    }
+
     var message = {};
 
     subject(message, context, iot)
       .finally(function() {
           listThingsStub.restore();
+          listThingPrincipalsStub.restore();
         })
       .should.eventually.be.fulfilled
       .and.to.deep.equal(transformListThingsResponse(listThingsResponse))
@@ -186,10 +273,7 @@ describe('retrieve a collection of things', function () {
           "thingName": "test"
         },
         {
-          "attributes": {
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:" +
-              "cert/eef774faec1911323e1f666be3c8feeac775492d3cdb2c070da618e7f266c6da"
-          },
+          "attributes": {},
           "thingName": "led"
         }
       ]
@@ -202,6 +286,24 @@ describe('retrieve a collection of things', function () {
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
 
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    listThingPrincipalsStub
+      .withArgs({
+          thingName: listThingsResponse.things[0].thingName
+        })
+      .yields(null, {
+          "principals": []
+        });
+    listThingPrincipalsStub
+      .withArgs({
+          thingName: expectedThing.thingName
+        })
+      .yields(null, {
+        "principals": [
+          String(randomString(64, 'hex'))
+        ]
+      });
+
     var message = {};
 
     subject(message, context, iot)
@@ -212,6 +314,7 @@ describe('retrieve a collection of things', function () {
       })
       .finally(function() {
         listThingsStub.restore();
+        listThingPrincipalsStub.restore();
       })
       .should.eventually.be.fulfilled
       .and.to.deep.equal(transformListThingsResponse({

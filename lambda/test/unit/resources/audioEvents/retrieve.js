@@ -79,9 +79,7 @@ describe('retrieving an audioEvent', function() {
     var listThingsResponse = {
       "things": [
         {
-          "attributes": {
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:cert/" + randomString(64, 'hex')
-          },
+          "attributes": {},
           "thingName": thingId
         }
       ]
@@ -92,6 +90,14 @@ describe('retrieving an audioEvent', function() {
     var iot = new AWS.Iot();
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
+
+    var listThingPrincipalsResponse = {
+      "principals": [
+        String(randomString(64, 'hex'))
+      ]
+    };
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    listThingPrincipalsStub.yields(null, listThingPrincipalsResponse);
 
     var noItemsQueryResponse = {
       Items: [],
@@ -119,6 +125,7 @@ describe('retrieving an audioEvent', function() {
         })
       .finally(function() {
           listThingsStub.restore();
+          listThingPrincipalsStub.restore();
           queryStub.restore();
         })
       .should.eventually.be.fulfilled
@@ -136,9 +143,7 @@ describe('retrieving an audioEvent', function() {
     var listThingsResponse = {
       "things": [
         {
-          "attributes": {
-            "certificateArn": "arn:aws:iot:us-east-1:012345678901:cert/" + randomString(64, 'hex')
-          },
+          "attributes": {},
           "thingName": thingId
         }
       ]
@@ -149,6 +154,14 @@ describe('retrieving an audioEvent', function() {
     var iot = new AWS.Iot();
     var listThingsStub = sinon.stub(iot, 'listThings');
     listThingsStub.yields(null, listThingsResponse);
+
+    var listThingPrincipalsResponse = {
+      "principals": [
+        String(randomString(64, 'hex'))
+      ]
+    };
+    var listThingPrincipalsStub = sinon.stub(iot, 'listThingPrincipals');
+    listThingPrincipalsStub.yields(null, listThingPrincipalsResponse);
 
     var audioEventsQueryResponse = {
       Items: [
@@ -213,6 +226,7 @@ describe('retrieving an audioEvent', function() {
       })
       .finally(function() {
         listThingsStub.restore();
+        listThingPrincipalsStub.restore();
         queryStub.restore();
       })
       .should.eventually.be.fulfilled
