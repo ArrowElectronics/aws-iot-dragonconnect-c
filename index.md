@@ -16,7 +16,7 @@ The functionality of DragonConnect and how the application is configured is
 detailed.  The documentation includes information on how to execute the client
 and visit the dashboard.
 
-Table of Contents
+### Table of Contents
 * * *
 * Example Overview
     * [Manage an LED](./functionality/circuit.html)
