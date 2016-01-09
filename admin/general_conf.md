@@ -50,7 +50,7 @@ admin: {
 The setting of 'arrow/registry' will result in the certificates being stored
 in the directory
 
-```js
+```sh
 cd ~/arrow/registry/${THING_ID}
 ```
 
