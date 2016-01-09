@@ -37,10 +37,7 @@ function createRole(iam, role) {
     AssumeRolePolicyDocument: JSON.stringify(role.trustDocument, null, 2)
   };
 
-  return Bluebird.resolve()
-    .then(function() {
-        return createRole(params);
-      })
+  return createRole(params)
     .catch(function(err) {
         switch (err.statusCode) {
           case 409: {
@@ -71,6 +68,9 @@ function attachInlinePolicies(iam, role) {
           };
 
           return awsPutRolePolicy(params);
+        })
+      .catch(function(err) {
+          throw err;
         });
   }
 }
@@ -90,6 +90,9 @@ function attachManagedPolicies(iam, role) {
           };
 
           return awsAttachRolePolicy(params);
+        })
+      .catch(function(err) {
+          throw err;
         });
   }
 }
@@ -112,26 +115,26 @@ function createResources() {
       role.alias = role.name;
     }
 
-    return Bluebird.resolve()
-      .then(function() {
-          return dynamicRoleHelper.findRole(role.name);
-        })
+    return dynamicRoleHelper.findRole(role.name)
       .then(function(existingRole) {
           if (existingRole) {
             console.info('Role ' + existingRole.RoleName + ' already exists.');
           } else {
-            return Bluebird.resolve()
+            return createRole(iam, role)
               .then(function() {
-                return createRole(iam, role)
-              })
+                  return attachManagedPolicies(iam, role);
+                })
               .then(function() {
-                return attachManagedPolicies(iam, role);
-              })
-              .then(function() {
-                return attachInlinePolicies(iam, role);
-              });
+                  return attachInlinePolicies(iam, role);
+                })
+              .catch(function(err) {
+                  throw err;
+                });
           }
-      })
+        })
+      .catch(function(err) {
+          throw err;
+        });
   });
 }
 
@@ -150,27 +153,45 @@ function deleteRole(iam, role) {
     .then(function() {
         if (role.managedPolicies) {
           return Bluebird.each(role.managedPolicies, function (policyArn) {
-            return awsDetachRolePolicy({
-              RoleName: role.alias,
-              PolicyArn: policyArn
-            });
-          });
+                return awsDetachRolePolicy({
+                      RoleName: role.alias,
+                      PolicyArn: policyArn
+                    })
+                  .catch(function(err) {
+                      throw err;
+                    });
+              })
+            .catch(function(err) {
+                throw err;
+              });
         }
       })
     .then(function() {
         if (role.inlinePolicies) {
           return Bluebird.each(Object.keys(role.inlinePolicies), function(policyName) {
-            return awsDeleteRolePolicy({
-              RoleName: role.alias,
-              PolicyName: policyName
-            });
-          });
+              return awsDeleteRolePolicy({
+                      RoleName: role.alias,
+                      PolicyName: policyName
+                  })
+                .catch(function (err) {
+                    throw err;
+                  });
+              })
+            .catch(function(err) {
+                throw err;
+              });
         }
       })
     .then(function() {
         return awsDeleteRole({
-          RoleName: role.alias
-        });
+              RoleName: role.alias
+            })
+          .catch(function(err) {
+              throw err;
+            });
+      })
+    .catch(function(err) {
+        throw err;
       });
 }
 
@@ -183,35 +204,36 @@ function deleteResources() {
     var dynamicRoleHelper = new DynamicRoleHelper(iam);
 
     return Bluebird.each(Object.keys(roles), function(roleRef) {
-        var role = roles[roleRef];
-        var roleName = config['iam'][roleRef]['roleName'];
+          var role = roles[roleRef];
+          var roleName = config['iam'][roleRef]['roleName'];
 
-        return Bluebird.resolve()
-          .then(function() {
-              return Bluebird.try(function() {
-                    return dynamicRoleHelper.findRole(roleName);
-                  })
-                .then(function(existingRole) {
-                    if (existingRole) {
-                      role.name = roleName;
-                      role.alias = existingRole.RoleName;
+          return dynamicRoleHelper.findRole(roleName)
+            .then(function(existingRole) {
+                if (existingRole) {
+                  role.name = roleName;
+                  role.alias = existingRole.RoleName;
 
-                      return deleteRole(iam, role);
-                    }
-                  })
-                .catch(function(err) {
-                    throw err;
-                  });
-            });
-      });
+                  return deleteRole(iam, role);
+                }
+              })
+            .catch(function(err) {
+                throw err;
+              });
+        })
+      .catch(function(err) {
+          throw err;
+        });
   } else {
     return Bluebird.each(Object.keys(roles), function(roleRef) {
-        var role = roles[roleRef];
-        role.name = config['iam'][roleRef]['roleName'];
-        role.alias = role.name;
+          var role = roles[roleRef];
+          role.name = config['iam'][roleRef]['roleName'];
+          role.alias = role.name;
 
-        return deleteRole(iam, role);
-      });
+          return deleteRole(iam, role);
+        })
+      .catch(function(err) {
+          throw err;
+        });
   }
 }
 
