@@ -51,7 +51,7 @@ The setting of 'arrow/registry' will result in the certificates being stored
 in the directory
 
 ```js
-cd ${HOME}/arrow/registry/${THING_ID}
+cd ~/arrow/registry/${THING_ID}
 ```
 
 This setting should be the same for that of the DragonPulse application
