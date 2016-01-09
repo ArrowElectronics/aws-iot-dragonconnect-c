@@ -55,9 +55,10 @@ deployed to the dev stage (the value of the --deploy parameter used in
 the previous command)
 
 ```sh
-$ aws apigateway get-stage --rest-api-id --stage-name dev \
+$ aws apigateway get-stage --rest-api-id \
 $(aws apigateway get-rest-apis \
---query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
+--query 'items[?name.contains(@, `DragonConnect`)].id' --output text) \
+--stage-name dev 
 ```
 
 The stageName attribute of the result from the above command
