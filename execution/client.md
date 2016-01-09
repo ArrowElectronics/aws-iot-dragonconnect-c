@@ -57,18 +57,7 @@ $ cd DragonBoard
 $ make
 ```
 
-## Certificates
-
-Copy the certificate information generated when the thing was created earlier
-to the certs directory
-
-```sh
-$ cd DragonBoard/certs
-$ export THING_ID=$(cat /etc/machine-id)
-$ cp ../../admin/registry/${THING_ID}/aws.{key,crt} .
-```
-
-# Running the Client
+## Running the Client
 
 The client may now be executed by issuing the following commands
 

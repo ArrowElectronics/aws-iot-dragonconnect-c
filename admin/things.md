@@ -27,15 +27,19 @@ $ export THING_ID=$(cat /etc/machine-id)
 $ node lib/things.js create ${THING_ID}
 ```
 
-The certificate of the thing with identifier of ${thingId} will be stored
-in the registry
+## DragonConnect Client Application
+
+The DragonConnect client application requires the generated certificates
+to establish a secure connection to the MQTT server.  The certificate of the
+thing with identifier of ${THING_ID} will be stored in the location specified
+in the [General Configuration](./general_conf.html).  The instructions below
+assume the use of the default location.  Copy the private key and public
+certificate to the certs directory
 
 ```sh
-$ cd admin/registry/${THING_ID}
+$ cd DragonBoard/certs
+$ cp ~/arrow/registry/${THING_ID}/aws.{key,crt} .
 ```
-
-You will need the aws.crt and aws.key to complete the configuration of the
-client.
 
 # Delete
 
