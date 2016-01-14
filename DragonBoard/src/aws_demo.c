@@ -259,7 +259,7 @@ int RegisterEventHandler(char *event, GIOFunc  event_fp, void* context)
 {
 	GIOChannel *c1=NULL;
 
-	c1 = g_io_channel_new_file(VOL_UP_EVENT, "r", NULL);
+	c1 = g_io_channel_new_file(event, "r", NULL);
 	if(!c1)
 		return -1;
 
