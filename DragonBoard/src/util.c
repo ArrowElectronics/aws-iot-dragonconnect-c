@@ -20,7 +20,7 @@ char *trimwhitespace(char *str)
   char *end;
 
   // Trim leading space
-  while(isspace(*str))
+  while (isspace(*str))
   {
     str++;
   }
@@ -33,9 +33,12 @@ char *trimwhitespace(char *str)
 
   // Trim trailing space
   end = str + strlen(str) - 1;
-  while(end > str && isspace(*end)) {
+  while (end > str && isspace(*end)) {
     end--;
   }
+
+  // Write new null terminator
+  *(end + 1) = 0;
 
   return str;
 }
