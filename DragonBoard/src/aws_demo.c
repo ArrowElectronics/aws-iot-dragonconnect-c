@@ -173,6 +173,7 @@ int main(int argc, char** argv)
 		ERROR("Could not register EventHandler");
 	}
 
+
 	//
 	//Create the mainloop for polling the button events
 	//
@@ -231,7 +232,7 @@ int main(int argc, char** argv)
 	//This call is blocking until the main loop is exited with a call to g_main_loop_quit(loop)
 	//from the CTRL-C handler;
 	INFO("Entering main-loop, please press ctrl-c to quit the demo-app:");
-	g_main_loop_run( loop );	//
+	g_main_loop_run( loop );	
 
 
 	INFO("Cleaning up application ...");
@@ -259,7 +260,7 @@ int RegisterEventHandler(char *event, GIOFunc  event_fp, void* context)
 {
 	GIOChannel *c1=NULL;
 
-	c1 = g_io_channel_new_file(VOL_UP_EVENT, "r", NULL);
+	c1 = g_io_channel_new_file(event, "r", NULL);
 	if(!c1)
 		return -1;
 
@@ -371,22 +372,31 @@ gboolean On_VolDown_ButtonPress(GIOChannel *source, GIOCondition condition, gpoi
 	IoT_Error_t rc = NONE_ERROR;
 	GError *error=0;
 	char buf[10];
-	gsize bytes_read;
 	char payload[MAX_PAYLOAD];
-/*
-	//INFO("Vol_Down Button pressed!");
+	struct input_event event;
+	gsize bytes_read;
+
+	INFO("Vol_Down Button pressed!");
+
 
 	//read and clear the event
 	g_io_channel_seek_position(source, 0, G_SEEK_SET, 0);
-	GIOStatus ret = g_io_channel_read_chars( source, buf, strlen(buf)-1, &bytes_read, &error);
-	//printf("ret:%d,  buf: %s, bytes_read:%d \n", ret, buf, (int) bytes_read);
+	g_io_channel_read_chars(source, (gchar*) &event, sizeof(event), &bytes_read, NULL);
+	if(bytes_read >0)
+	    printf("Event0: keypress value=%x, type=%x, code=%x\n", event.value, event.type, event.code);
 
 	char* thingID = (char*) data;
-	sprintf(payload, "{thingId: %s, volume:%s}", thingID, "increase");
+	sprintf(payload, "{\n\"timestamp\": \"%lu\", \"volume\": \"%s\" \n}\n", GetTimeSinceEpoch(), "decrease");
+	printf("%s", payload);
 
-	MQTT_Send_Message(vol_button_topic, payload, strlen(payload));
-*/
-	return 1; //indicate event handled
+	/**/
+	char topic[512];
+        sprintf(topic, vol_button_topic, thingID);        
+	rc = MQTT_Send_Message(topic, payload, strlen(payload));
+	if (NONE_ERROR != rc)
+			ERROR("Could not publish event: ");
+
+	return 1;	//indicate event handled
 }
 
 int MSG_GetDesiredState( int payload_len, char * payload, bool *des_state)
