@@ -8,11 +8,37 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <string.h>
 #include "util.h"
 
 #define MAX_BUF 40
 
 char machineID[MAX_BUF]="";
+
+char *trimwhitespace(char *str)
+{
+  char *end;
+
+  // Trim leading space
+  while(isspace(*str))
+  {
+    str++;
+  }
+
+  // All spaces?
+  if (*str == 0)
+  {
+    return str;
+  }
+
+  // Trim trailing space
+  end = str + strlen(str) - 1;
+  while(end > str && isspace(*end)) {
+    end--;
+  }
+
+  return str;
+}
 
 char* GetMachineID()
 {
@@ -24,5 +50,5 @@ char* GetMachineID()
 	//read the machine-id
 	while (fgets(machineID, MAX_BUF, fptr)!=NULL);
 
-	return machineID;
+	return trimwhitespace(machineID);
 }

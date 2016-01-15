@@ -33,7 +33,7 @@ int MSG_SetReportedState( int payload_len, char * payload, bool rep_state);
 
 //Globals
 char certDirectory[PATH_MAX + 1] = "../certs";
-char HostAddress[255] = "A1A97Y3SMARFZT.iot.us-east-1.amazonaws.com"; //"data.iot.us-east-1.amazonaws.com";
+char HostAddress[255] = "data.iot.us-east-1.amazonaws.com";
 uint16_t port = 8883;
 
 char vol_button_topic[]="things/%s/audio/events";
@@ -349,7 +349,7 @@ gboolean On_VolUp_ButtonPress(GIOChannel *source, GIOCondition condition, gpoint
 	    printf("Event1: keypress value=%x, type=%x, code=%x\n", event.value, event.type, event.code);
 
 	char* thingID = (char*) data;
-	sprintf(payload, "{\n\"timestamp\": \"%lu\", \"volume\": \"%s\" \n}\n", GetTimeSinceEpoch(), "increase");
+	sprintf(payload, "{\n\"timestamp\": %lu, \"volume\": \"%s\" \n}\n", GetTimeSinceEpoch(), "increase");
 	printf("%s", payload);
 
 	/**/
