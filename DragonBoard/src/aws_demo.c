@@ -194,8 +194,15 @@ int main(int argc, char** argv)
 	INFO("AWS IoT SDK:   %d.%d.%d-%s", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_TAG);
 	INFO("rootCA:        %s", rootCA);
 	INFO("clientCRT:     %s", clientCRT);
-	INFO("clientKey:     %s", clientKey);
+	INFO("clientKey:     %s\n", clientKey);
 
+	struct stat reqFileStat;
+	if (stat(rootCA, &reqFileStat) < 0 || stat(clientCRT, &reqFileStat) < 0 ||
+	    stat(clientKey, &reqFileStat) < 0)
+	{
+		ERROR("Root certificate and client certificate and key MUST be present.");
+		exit(1);
+	}
 
 	//
 	// Connect MQTT client
