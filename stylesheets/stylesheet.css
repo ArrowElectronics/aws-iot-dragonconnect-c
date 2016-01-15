@@ -255,11 +255,19 @@ hr.home {
   margin-bottom: 30px;
 }
 
+.detail hr {
+  border: none;
+  background: none;
+  margin-top: 50px;
+  margin-bottom: 40px;
+  border-top: 3px solid #F73D1F;
+}
+
 table {
   border: 1px solid #373737;
   margin-bottom: 20px;
   text-align: left;
- }
+}
 
 th {
   font-family: 'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, sans-serif;

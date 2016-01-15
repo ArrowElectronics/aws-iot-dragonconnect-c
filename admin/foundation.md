@@ -34,6 +34,8 @@ $ cd admin
 $ node lib/foundation.js delete
 ```
 
+<div class="detail"><hr/></div>
+
 # Details
 
 The foundation.js script performs the following functions by Amazon service
