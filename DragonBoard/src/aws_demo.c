@@ -17,6 +17,7 @@
 #include "util.h"
 #include "mtime.h"
 
+#define GPIO12 12
 #define MAX_BUF 40
 #define MAX_PAYLOAD 100
 #define VOL_UP_EVENT   "/dev/input/event1"
@@ -144,20 +145,11 @@ int main(int argc, char** argv)
 	thingID = GetMachineID();
 
 	//
-	// Export the vol+/- GPIO's as well as GPIO2 for the LED output
+	// Export GPIO12 for LED output
 	//
-	ret = Export_GPIO(107); 	//Export Vol+ button (GPIO 107)
+	ret = Export_GPIO(GPIO12); 	//Export GPIO12 for LED output
 	if (ret != 0) {
-		ERROR("Could not export Vol+/- GPIO");
-	}
-	ret = Export_GPIO(108); 	//Export Vol- button (GPIO )
-	if (ret != 0) {
-		ERROR("Could not export Vol+/- GPIO");
-	}
-
-	ret = Export_GPIO(2); 	//Export GPIO2 for LED output
-	if (ret != 0) {
-		ERROR("Could not export Vol+/- GPIO");
+		ERROR("Could not export LED GPIO");
 	}
 
 	//
@@ -307,7 +299,7 @@ int MQTTcallbackHandler(MQTTCallbackParams params)
 	//Update current LED- and GPIO- state to the desired state
 	INFO("Updating state: %d\n",des_state);
 	SetLEDState(UserLED_4, des_state);
-	Write_GPIO(2, des_state);
+	Write_GPIO(GPIO12, des_state);
 
 	//Write response message
 	char msg_payload[MAX_PAYLOAD];
@@ -347,26 +339,28 @@ gboolean On_VolUp_ButtonPress(GIOChannel *source, GIOCondition condition, gpoint
 	struct input_event event;
 	gsize bytes_read;
 
-	INFO("Vol_Up Button pressed!");
-
-
 	//read and clear the event
 	g_io_channel_seek_position(source, 0, G_SEEK_SET, 0);
 	g_io_channel_read_chars(source, (gchar*) &event, sizeof(event), &bytes_read, NULL);
-	if(bytes_read >0)
-	    printf("Event1: keypress value=%x, type=%x, code=%x\n", event.value, event.type, event.code);
 
-	char* thingID = (char*) data;
-	sprintf(payload, "{\n\"timestamp\": %lu, \"volume\": \"%s\" \n}\n", GetTimeSinceEpoch(), "increase");
-	printf("%s", payload);
+//	if(bytes_read >0)
+//	    printf("Event1: keypress value=%x, type=%x, code=%x\n", event.value, event.type, event.code);
 
-	/**/
-	char topic[512];
-        sprintf(topic, vol_button_topic, thingID);        
-	rc = MQTT_Send_Message(topic, payload, strlen(payload));
-	if (NONE_ERROR != rc)
+	if(event.code == 0x73 && event.value == 0x1)
+	{
+		INFO("Vol_Up Button pressed!");
+
+		char* thingID = (char*) data;
+		sprintf(payload, "{\n\"timestamp\": %lu, \"volume\": \"%s\" \n}\n", GetTimeSinceEpoch(), "increase");
+		printf("%s", payload);
+
+		/**/
+		char topic[512];
+        	sprintf(topic, vol_button_topic, thingID);        
+		rc = MQTT_Send_Message(topic, payload, strlen(payload));
+		if (NONE_ERROR != rc)
 			ERROR("Could not publish event: ");
-
+	}
 	return 1;	//indicate event handled
 }
 
@@ -383,26 +377,28 @@ gboolean On_VolDown_ButtonPress(GIOChannel *source, GIOCondition condition, gpoi
 	struct input_event event;
 	gsize bytes_read;
 
-	INFO("Vol_Down Button pressed!");
-
-
 	//read and clear the event
 	g_io_channel_seek_position(source, 0, G_SEEK_SET, 0);
 	g_io_channel_read_chars(source, (gchar*) &event, sizeof(event), &bytes_read, NULL);
-	if(bytes_read >0)
-	    printf("Event0: keypress value=%x, type=%x, code=%x\n", event.value, event.type, event.code);
 
-	char* thingID = (char*) data;
-	sprintf(payload, "{\n\"timestamp\": %lu, \"volume\": \"%s\" \n}\n", GetTimeSinceEpoch(), "decrease");
-	printf("%s", payload);
+//	if(bytes_read >0)
+//	    printf("Event0: keypress value=%x, type=%x, code=%x\n", event.value, event.type, event.code);
 
-	/**/
-	char topic[512];
-        sprintf(topic, vol_button_topic, thingID);        
-	rc = MQTT_Send_Message(topic, payload, strlen(payload));
-	if (NONE_ERROR != rc)
+	if(event.code == 0x72 && event.value == 0x1)
+	{
+		INFO("Vol_Down Button pressed!");
+
+		char* thingID = (char*) data;
+		sprintf(payload, "{\n\"timestamp\": %lu, \"volume\": \"%s\" \n}\n", GetTimeSinceEpoch(), "decrease");
+		printf("%s", payload);
+
+		/**/
+		char topic[512];
+        	sprintf(topic, vol_button_topic, thingID);        
+		rc = MQTT_Send_Message(topic, payload, strlen(payload));
+		if (NONE_ERROR != rc)
 			ERROR("Could not publish event: ");
-
+	}
 	return 1;	//indicate event handled
 }
 
