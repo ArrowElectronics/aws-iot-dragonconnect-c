@@ -48,6 +48,15 @@ module.exports = {
         "Resource": [
           createIotArn('topicfilter/$aws/things/*/shadow/update/delta')
         ]
+      },
+      {
+        "Effect": ALLOW,
+        "Action": [
+          "iot:Receive"
+        ],
+        "Resource": [
+          createIotArn('topic/$aws/things/*/shadow/update/delta')
+        ]
       }
     ]
   }
