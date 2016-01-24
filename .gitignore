@@ -3,3 +3,6 @@
 _site
 Gemfile.lock
 node_modules
+api/dragonconnect.yaml
+lambda/dist
+lambda/logs

@@ -99,6 +99,7 @@ module.exports = {
               "iot:GetThingShadow",
               "iot:ListThings",
               "iot:ListThingPrincipals",
+              "iot:ListPrincipalPolicies",
               "iot:UpdateThingShadow"
             ],
             "Resource": [

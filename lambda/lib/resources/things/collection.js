@@ -7,30 +7,73 @@ var errors = require('./../../error'),
     AccessDeniedError = errors.AccessDeniedError,
     UnknownError = errors.UnknownError;
 
+var config = require('dragonconnect-config');
+
+function containPolicy(policies, policyName, context) {
+  var methodName = 'things-collection#containPolicy()';
+
+  context.logger.debug( { policies: policies, policyName: policyName }, methodName);
+
+  var returnValue = false;
+
+  for (var i = 0; i < policies.length; i++) {
+    var policy = policies[i];
+    if (policy.hasOwnProperty('policyName') && policy['policyName'] === policyName) {
+      returnValue = true;
+      break;
+    }
+  }
+
+  context.logger.debug( { contains: returnValue }, methodName);
+
+  return returnValue;
+}
+
 function thingPrincipalFilter(thing, context, iot) {
-  var methodName = 'collection#thingPrincipalFilter()';
+  var methodName = 'things-collection#thingPrincipalFilter()';
+
+  var iotListThingPrincipals = Bluebird.promisify(iot.listThingPrincipals, { context: iot });
+  var iotListPrincipalPolicies = Bluebird.promisify(iot.listPrincipalPolicies, { context: iot });
 
   var params = {
     thingName: thing.thingName
   };
 
-  var iotListThingPrincipals = Bluebird.promisify(iot.listThingPrincipals, { context: iot });
-  return Bluebird.resolve()
-    .then(function() {
-        return iotListThingPrincipals(params)
-      })
+  return iotListThingPrincipals(params)
     .then(function(result) {
-      var returnValue = false;
+        var returnValue;
 
-      if (result && result.hasOwnProperty('principals')) {
-        var principals = result.principals;
-        if (Array.isArray(principals) && principals.length > 0) {
-          returnValue = true;
+        if (result && result.hasOwnProperty('principals')) {
+          var principals = result.principals;
+          if (Array.isArray(principals) && principals.length > 0) {
+            returnValue = principals[0];
+          }
         }
-      }
 
-      return returnValue;
-    });
+        return returnValue;
+      })
+    .then(function(principal) {
+        if (principal) {
+          context.logger.info({ principal: principal }, methodName);
+
+          return iotListPrincipalPolicies({
+            principal: principal
+          })
+            .then(function(result) {
+              return containPolicy(result.policies, config.iot.policies.DragonConnectThing, context);
+            })
+            .catch(function(err) {
+              throw err;
+            });
+        } else {
+          context.logger.info('No principal found:  ' + methodName);
+
+          return false;
+        }
+      })
+    .catch(function(err) {
+        throw err;
+      });
 }
 
 function transformResponse(things, context) {
