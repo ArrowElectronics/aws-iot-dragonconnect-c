@@ -9,7 +9,7 @@
         "s3:GetObject"
       ],
       "Resource": [
-        "arn:aws:s3:::dragonconnect/*"
+        "${aws_s3_identifier}"
       ]
     }
   ]

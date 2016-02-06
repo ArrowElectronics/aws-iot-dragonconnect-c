@@ -5,10 +5,10 @@ var ledName = 'DragonConnect-led';
 var thingsName = 'DragonConnect-things';
 
 module.exports = {
-  region: 'us-east-1',
-  accountNumber: '012345678901',
+  region: '${aws_region}',
+  accountNumber: '${aws_accountNumber}',
   admin: {
-    registry: 'arrow/registry'
+    registry: '${aws_registryDir}'
   },
   iam: {
     lambda: {

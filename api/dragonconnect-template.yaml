@@ -139,8 +139,8 @@ paths:
       x-amazon-apigateway-integration:
         type: AWS
         httpMethod: POST
-        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${accountNumber}:function:DragonConnect-things/invocations'
-        credentials: 'arn:aws:iam::${accountNumber}:role/DragonConnect-ApiGateway-${ext}'
+        uri: 'arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${aws_accountNumber}:function:DragonConnect-things/invocations'
+        credentials: 'arn:aws:iam::${aws_accountNumber}:role/DragonConnect-ApiGateway-${aws_ext}'
         requestTemplates:
           application/json: |
             {
@@ -295,8 +295,8 @@ paths:
       x-amazon-apigateway-integration:
         type: AWS
         httpMethod: POST
-        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${accountNumber}:function:DragonConnect-things/invocations'
-        credentials: 'arn:aws:iam::${accountNumber}:role/DragonConnect-ApiGateway-${ext}'
+        uri: 'arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${aws_accountNumber}:function:DragonConnect-things/invocations'
+        credentials: 'arn:aws:iam::${aws_accountNumber}:role/DragonConnect-ApiGateway-${aws_ext}'
         requestTemplates:
           application/json: |
             {
@@ -494,8 +494,8 @@ paths:
       x-amazon-apigateway-integration:
         type: AWS
         httpMethod: POST
-        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${accountNumber}:function:DragonConnect-audioEvents/invocations'
-        credentials: 'arn:aws:iam::${accountNumber}:role/DragonConnect-ApiGateway-${ext}'
+        uri: 'arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${aws_accountNumber}:function:DragonConnect-audioEvents/invocations'
+        credentials: 'arn:aws:iam::${aws_accountNumber}:role/DragonConnect-ApiGateway-${aws_ext}'
         requestTemplates:
           application/json: |
             #set($limit = $input.params('limit'))
@@ -683,7 +683,7 @@ paths:
       x-amazon-apigateway-integration:
         type: AWS
         httpMethod: POST
-        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${accountNumber}:function:DragonConnect-led/invocations'
+        uri: 'arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${aws_accountNumber}:function:DragonConnect-led/invocations'
         requestTemplates:
           application/json: |
             {
@@ -692,7 +692,7 @@ paths:
                 "thingId": "$input.params('thingId')"
               }
             }
-        credentials: 'arn:aws:iam::${accountNumber}:role/DragonConnect-ApiGateway-${ext}'
+        credentials: 'arn:aws:iam::${aws_accountNumber}:role/DragonConnect-ApiGateway-${aws_ext}'
         responses:
           'InvalidEntityError:.*':
             statusCode: '400'
@@ -826,8 +826,8 @@ paths:
       x-amazon-apigateway-integration:
         type: AWS
         httpMethod: POST
-        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${accountNumber}:function:DragonConnect-led/invocations'
-        credentials: 'arn:aws:iam::${accountNumber}:role/DragonConnect-ApiGateway-${ext}'
+        uri: 'arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${aws_accountNumber}:function:DragonConnect-led/invocations'
+        credentials: 'arn:aws:iam::${aws_accountNumber}:role/DragonConnect-ApiGateway-${aws_ext}'
         requestTemplates:
           application/json: |
             #set($active = $input.json('$.active'))
