@@ -11,7 +11,7 @@ DRAGONCONNECT="aws-iot-dragonconnect-c"
 
 #ask for:
 ## account number
-## region
+## region - read from ~/.aws/config
 ## stage
 ## s3 bucket identifier
 
