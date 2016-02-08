@@ -105,6 +105,8 @@ fi
 #store to .settings
 echo "AWS_ACCOUNT=$AWS_ACCOUNT">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
 
+echo -e "*Using $AWS_REGION as AWS Region"
+
 #------------------
 
 echo -e "Enter a Stage (Default is dev, Typical Stages are prod,test,qa):"
@@ -114,6 +116,7 @@ if [ "$pStage" != "" ] ; then
     AWS_API_STAGE=$pStage
 fi
 
+echo -e "*Using $AWS_API_STAGE as API Stage"
 #store to .settings
 echo "AWS_API_STAGE=$AWS_API_STAGE">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
 
@@ -134,9 +137,9 @@ else
 fi
 
 #convert to lowercase
-AWS_S3_IDENTIFIER=$($AWS_S3_IDENTIFIER | tr "[:upper:]" "[:lower:]")
-echo -e "Using $AWS_S3_IDENTIFIER as S3 Identifier"
+AWS_S3_IDENTIFIER=$(echo $AWS_S3_IDENTIFIER | tr "[:upper:]" "[:lower:]")
 
+echo -e "*Using $AWS_S3_IDENTIFIER as S3 Identifier"
 #store to .settings
 echo "AWS_S3_IDENTIFIER=$AWS_S3_IDENTIFIER">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
 
