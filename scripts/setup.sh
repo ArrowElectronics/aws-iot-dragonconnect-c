@@ -43,7 +43,10 @@ fi
 ARROW_SCRIPTS_DIR="$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION/scripts/"
 #lets remove the current script settings
 cd $ARROW_SCRIPTS_DIR
-rm $ARROW_INSTALLER_SETTINGS
+
+if [ -f " " ]; then
+	rm $ARROW_INSTALLER_SETTINGS
+fi
 
 #store to .settings
 echo "BASE_DRAGONBOARD_DIR=$BASE_DRAGONBOARD_DIR">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
@@ -116,16 +119,17 @@ echo "AWS_API_STAGE=$AWS_API_STAGE">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTING
 
 #------------------
 
-echo -e "Enter a S3 Identifier (Typical Identifiers can be something like Your Username):"
+echo -e "Enter a S3 Identifier (Default with be a random hash. Typical Identifiers can be something like Your Username):"
 read pS3Ident
 
 if [ "$pS3Ident" != "" ] ; then
     AWS_S3_IDENTIFIER=$pS3Ident
     #convert to lowercase
-    AWS_S3_IDENTIFIER=$(AWS_S3_IDENTIFIER,,)
+    AWS_S3_IDENTIFIER=$($AWS_S3_IDENTIFIER,,)
 else
-    echo -e "No S3 Identifier entered."
-    exit 1
+	THING_ID_STR=$(cat /etc/machine-id)
+	#extract a 5 char length from thing id
+	AWS_S3_IDENTIFIER=$($THING_ID_STR:-5)
 fi
 
 #store to .settings
