@@ -19,7 +19,7 @@
   "homepage": "https://github.com/arrowelectronics/aws-iot-dragonconnect-c",
   "dependencies": {
     "aws-sdk": "^2.2.19",
-    "bluebird": "^3.0.6",
+    "bluebird": "3.2.x",
     "commander": "^2.9.0",
     "dragonconnect-config": "^0.1.0",
     "home-dir": "^1.0.0",

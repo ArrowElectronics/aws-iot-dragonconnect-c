@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/arrowelectronics/aws-iot-dragonconnect-c/issues"
   },
-  "homepage": "https://github.com/arrowelectronics/aws-iot-dragonconnect-c#readme"
+  "homepage": "https://github.com/arrowelectronics/aws-iot-dragonconnect-c#readme",
+  "dependencies": {
+    "bluebird": "3.2.x"
+  }
 }

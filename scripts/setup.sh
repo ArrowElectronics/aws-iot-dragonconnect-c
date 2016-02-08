@@ -250,7 +250,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     #store to .settings
     echo "AWS_S3_ARN=$AWS_S3_ARN">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     
-    sed -e 's/__aws_s3_identifier__/$AWS_S3_ARN/g' -e bucket-policy-template.json > bucket-policy.json
+    sed -e 's/__aws_s3_identifier__/$AWS_S3_ARN/g' bucket-policy-template.json > bucket-policy.json
 
 	aws s3api put-bucket-policy --bucket $ARROW_APP_NAME-$AWS_S3_IDENTIFIER --policy file://bucket-policy.json
 	aws s3 website s3://$ARROW_APP_NAME-$AWS_S3_IDENTIFIER --index-document index.html
