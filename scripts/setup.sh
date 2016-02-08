@@ -129,7 +129,10 @@ if [ "$pS3Ident" != "" ] ; then
 else
 	THING_ID_STR=$(cat /etc/machine-id)
 	#extract a 5 char length from thing id
-	AWS_S3_IDENTIFIER=$($THING_ID_STR:-5)
+	THING_ID_LENGTH=$(echo -n $THING_ID_STR | wc -c)
+	IDX=$(expr $THING_ID_LENGTH - 5)
+	AWS_S3_IDENTIFIER=$($THING_ID_STR:-$IDX)
+	echo -e "Using $AWS_S3_IDENTIFIER as S3 Identifier"
 fi
 
 #store to .settings
