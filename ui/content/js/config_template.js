@@ -6,7 +6,7 @@
 var DEBUG=false;
 
 //control where ajax calls are made to
-var DB_API='${aws_api_gateway}';
+var DB_API='__aws_api_gateway__';
 
 //placeholder to store the thingId
 //we go against the thing registry to see what things are available and store it here

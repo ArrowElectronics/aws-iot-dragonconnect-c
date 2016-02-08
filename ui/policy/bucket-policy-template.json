@@ -9,7 +9,7 @@
         "s3:GetObject"
       ],
       "Resource": [
-        "${aws_s3_identifier}"
+        "__aws_s3_identifier__"
       ]
     }
   ]
