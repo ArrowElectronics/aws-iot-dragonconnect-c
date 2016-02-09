@@ -3,7 +3,7 @@ SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
 
 
 BASE_DRAGONBOARD_DIR="/home/linaro/Documents"
-DEFAULT_REGISTRY_DIR="/registry"
+DEFAULT_REGISTRY_DIR="registry"
 ARROW_DIR="arrow"
 ARROW_APPLICATION="aws-iot-dragonconnect-c"
 ARROW_APP_SEARCH_NEEDLE="DragonConnect"
@@ -89,7 +89,7 @@ echo "ARROW_SCRIPTS_DIR=$ARROW_SCRIPTS_DIR">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER
 
 #------------------
 
-echo -e "Enter a Location to Store Certificates and Keys (Default is $BASE_DRAGONBOARD_DIR$DEFAULT_REGISTRY_DIR):"
+echo -e "Enter a Location to Store Certificates and Keys (Default is $BASE_DRAGONBOARD_DIR/$DEFAULT_REGISTRY_DIR):"
 read pCertDir
 
 if [ "$pCertDir" != "" ] ; then
@@ -325,15 +325,15 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 
 	echo -e "***Installing Certificates for the Device..."
 	cd DragonBoard/certs
-	cp $ARROW_CERT_DIR/$THING_ID/aws.{key,crt} .
+	cp $BASE_DRAGONBOARD_DIR/$ARROW_CERT_DIR/$THING_ID/aws.{key,crt} .
 
 #------------------
 
-	echo -e "***Access your DragonConnect dashboard here:"
+	
     
     #build s3 path
     APP_S3_PATH="http://$ARROW_APP_NAME-$AWS_S3_IDENTIFIER.s3-website-$AWS_REGION.amazonaws.com"
-	echo $APP_S3_PATH
+	echo -e "***Access your DragonConnect dashboard here: $APP_S3_PATH"
     
     #store to .settings
     echo "APP_S3_PATH=$APP_S3_PATH">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
