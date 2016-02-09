@@ -5,8 +5,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "admin": "node lib/admin.js",
-    "foundation": "node lib/foundation.js"
+    "admin": "node lib/admin.js"
   },
   "repository": {
     "type": "git",
