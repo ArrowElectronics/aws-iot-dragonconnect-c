@@ -29,7 +29,7 @@ echo -e "# Welcome to Arrow's $ARROW_APP_SEARCH_NEEDLE for Amazon AWS       #"
 echo -e "#    This script will setup and provision your $ARROW_APP_SEARCH_NEEDLE"
 echo -e "################################################"
 
-echo -e "DragonConnect should exist at $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION"
+echo -e "$ARROW_APP_SEARCH_NEEDLE should exist at $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION"
 
 if [ ! -d "$BASE_DRAGONBOARD_DIR" ]; then
 	echo -e "Please provide an alternate base directory:"
