@@ -160,7 +160,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 		rm index.js
 	fi
 
-    sed -e 's/__aws_region__/$AWS_REGION/g' -e 's/__aws_accountNumber__/$AWS_ACCOUNT/g' -e 's/__aws_registryDir__/$ARROW_CERT_DIR/g' index-template.js > index.js
+    sed -e "s/__aws_region__/$AWS_REGION/g" -e "s/__aws_accountNumber__/$AWS_ACCOUNT/g" -e "s/__aws_registryDir__/$ARROW_CERT_DIR/g" index-template.js > index.js
     
     #reset the path
     cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
@@ -216,7 +216,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 		rm $ARROW_APP_NAME.yaml
 	fi
 
-	sed -e 's/__aws_region__/$AWS_REGION/g' -e 's/__aws_accountNumber__/$AWS_ACCOUNT/g' -e 's/__aws_ext__/$AWS_API_EXTENSION/g' $ARROW_APP_NAME-template.yaml > $ARROW_APP_NAME.yaml
+	sed -e "s/__aws_region__/$AWS_REGION/g" -e "s/__aws_accountNumber__/$AWS_ACCOUNT/g" -e "s/__aws_ext__/$AWS_API_EXTENSION/g" $ARROW_APP_NAME-template.yaml > $ARROW_APP_NAME.yaml
 	java -jar lib/aws-apigateway-importer.jar --create --deploy $AWS_API_STAGE $ARROW_APP_NAME.yaml
 
 	###do a check
@@ -246,7 +246,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 		rm config.js
 	fi
 
-    sed -e 's/__aws_api_gateway__/$AWS_API_GATEWAY/g' config_template.js > config.js
+    sed -e "s/__aws_api_gateway__/$AWS_API_GATEWAY/g" config_template.js > config.js
     
     #reset the path
 	cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
@@ -273,7 +273,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 		rm bucket-policy.json
 	fi
 
-    sed -e 's/__aws_s3_identifier__/$AWS_S3_ARN/g' bucket-policy-template.json > bucket-policy.json
+    sed -e "s/__aws_s3_identifier__/$AWS_S3_ARN/g" bucket-policy-template.json > bucket-policy.json
 
 	aws s3api put-bucket-policy --bucket $ARROW_APP_NAME-$AWS_S3_IDENTIFIER --policy file://bucket-policy.json
 	aws s3 website s3://$ARROW_APP_NAME-$AWS_S3_IDENTIFIER --index-document index.html
