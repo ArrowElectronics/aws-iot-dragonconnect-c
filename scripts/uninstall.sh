@@ -10,6 +10,10 @@ ARROW_APP_NAME="dragonconnect"
 ARROW_INSTALLER_SETTINGS=".settings"
 AWS_S3_IDENTIFIER=""
 
+echo -e "################################################"
+echo -e "# Welcome to Arrow's $ARROW_APP_SEARCH_NEEDLE for Amazon AWS       #"
+echo -e "#    This script will uninstall and cleanup resources in Amazon"
+echo -e "################################################"
 
 #if settings exist - we can use that
 #otherwise ask for the s3-identifier
@@ -77,6 +81,10 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     aws s3 rm s3://$ARROW_APP_NAME-$AWS_S3_IDENTIFIER --recursive
  
  #------------------
+
+ echo -e "################################################"
+ echo -e "# Uninstall and Cleanup Complete               #"
+ echo -e "################################################"
     
 else
   echo "Please make sure the directory '$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION' is accesible"
