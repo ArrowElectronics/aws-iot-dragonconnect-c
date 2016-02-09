@@ -59,8 +59,13 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
  #------------------
     
     echo -e "***Removing Amazon API gateway..."
-    #TODO (gtam): search string to be not hardcoded
-    aws apigateway delete-rest-api --rest-api-id $(aws apigateway get-rest-apis --query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
+    
+    API_LIST=$(aws apigateway get-rest-apis --query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
+    for i in $(echo $API_LIST | tr  -s ' ')
+    do
+         echo -e "deleting $i ..."
+         aws apigateway delete-rest-api --rest-api-id $i
+    done
     
     #reset the path
     cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
