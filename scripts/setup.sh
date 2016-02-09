@@ -2,7 +2,7 @@
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
 
 
-BASE_DRAGONBOARD_DIR="/home/linaro/Documents"
+BASE_DRAGONBOARD_DIR="/Documents"
 DEFAULT_REGISTRY_DIR="registry"
 ARROW_DIR="arrow"
 ARROW_APPLICATION="aws-iot-dragonconnect-c"
