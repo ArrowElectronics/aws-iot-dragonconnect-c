@@ -201,7 +201,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	#Lambda function management
 	cd lambda
 	NODE_PATH=lib
-    export $NODE_PATH
+    export NODE_PATH=lib
     
 	npm install ../config
 	npm install -g grunt-cli
