@@ -19,6 +19,8 @@ AWS_S3_IDENTIFIER=""
 AWS_API_EXTENSION=""
 AWS_API_GATEWAY=""
 
+THING_ID=""
+
 AWS_CONFIG_LOCATION="/home/linaro/.aws/config"
 
 NODE_PATH=""
@@ -99,14 +101,17 @@ echo "ARROW_SCRIPTS_DIR=$ARROW_SCRIPTS_DIR">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER
 
 #------------------
 
-echo -e "Enter a Location to Store Certificates and Keys (Default is $BASE_DRAGONBOARD_DIR/$DEFAULT_REGISTRY_DIR):"
-read pCertDir
+# REMOVE the ability to choose a registry location
+#echo -e "Enter a Location to Store Certificates and Keys (Default is $BASE_DRAGONBOARD_DIR/$DEFAULT_REGISTRY_DIR):"
+#read pCertDir
 
-if [ "$pCertDir" != "" ] ; then
-    ARROW_CERT_DIR=$pCertDir
-else
-   ARROW_CERT_DIR=$BASE_DRAGONBOARD_DIR/$DEFAULT_REGISTRY_DIR
-fi
+#if [ "$pCertDir" != "" ] ; then
+#    ARROW_CERT_DIR=$pCertDir
+#else
+#   ARROW_CERT_DIR=$BASE_DRAGONBOARD_DIR/$DEFAULT_REGISTRY_DIR
+#fi
+
+ARROW_CERT_DIR=$BASE_DRAGONBOARD_DIR/$DEFAULT_REGISTRY_DIR
 
 #store to .settings
 echo "ARROW_CERT_DIR=$ARROW_CERT_DIR">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS

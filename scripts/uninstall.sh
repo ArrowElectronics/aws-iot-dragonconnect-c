@@ -82,6 +82,12 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
  
  #------------------
 
+    echo -e "***Removing the Thing..."
+    cd admin
+    node lib/things.js delete $THING_ID
+
+ #------------------
+
  echo -e "################################################"
  echo -e "# Uninstall and Cleanup Complete               #"
  echo -e "################################################"
