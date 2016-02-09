@@ -238,8 +238,11 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     cd ui/content/js
 	#get the api identifier
 	#TODO (gtam): find a way to insert shell var into aws 
-	AWS_API_IDENTIFIER=$(aws apigateway get-rest-apis --query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
-
+	IDENTIFIER_INPUT=$(aws apigateway get-rest-apis --query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
+    
+    #there could be multiple, take the first one
+    AWS_API_IDENTIFIER=$(echo $IDENTIFIER_INPUT | tr -s ' ' | cut -d ' ' -f 1)
+    
     #build the aws gateway?
     AWS_API_GATEWAY="https://$AWS_API_IDENTIFIER.execute-api.$AWS_REGION.amazonaws.com/$AWS_API_STAGE"
     
