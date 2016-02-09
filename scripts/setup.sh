@@ -87,6 +87,8 @@ else
   exit 1
 fi
 
+#strip white spaces
+AWS_REGION=$(echo $AWS_REGION | xargs)
 #store to .settings
 echo "AWS_REGION=$AWS_REGION">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
 
