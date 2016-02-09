@@ -44,7 +44,7 @@ ARROW_SCRIPTS_DIR="$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION/scripts/"
 #lets remove the current script settings
 cd $ARROW_SCRIPTS_DIR
 
-if [ -f " " ]; then
+if [ -f "$ARROW_INSTALLER_SETTINGS" ]; then
 	rm $ARROW_INSTALLER_SETTINGS
 fi
 
@@ -87,6 +87,8 @@ else
   exit 1
 fi
 
+#strip white spaces
+AWS_REGION=$(echo $AWS_REGION | xargs)
 #store to .settings
 echo "AWS_REGION=$AWS_REGION">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
 
@@ -155,7 +157,13 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     echo -e "***Creating Config for Arrow and AWS..."
     
 	cd config
-    sed -e 's/__aws_region__/$AWS_REGION/g' -e 's/__aws_accountNumber__/$AWS_ACCOUNT/g' -e 's/__aws_registryDir__/$ARROW_CERT_DIR/g' index-template.js > index.js
+
+	if [ -f "index.js" ]; then
+		rm index.js
+	fi
+
+	#use a different delimiter
+    sed -e "s#__aws_region__#$AWS_REGION#g" -e "s#__aws_accountNumber__#$AWS_ACCOUNT#g" -e "s#__aws_registryDir__#$ARROW_CERT_DIR#g" index-template.js > index.js
     
     #reset the path
     cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
@@ -195,26 +203,32 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 
 	echo -e "***Configuring Amazon API gateway..."
 	#get the extension
-	EXT_INPUT=$(aws iam list-roles --query 'Roles[?RoleName.contains(@, `$ARROW_APP_SEARCH_NEEDLE-ApiGateway`)].RoleName' --output text)
-    
+	#TODO (gtam): find a way to insert shell var into aws 
+	EXT_INPUT=$(aws iam list-roles --query 'Roles[?RoleName.contains(@, `DragonConnect-ApiGateway`)].RoleName' --output text)
+
     for i in $(echo $EXT_INPUT | tr "-" "\n")
     do
         #this is kind of a hack, since we only need the last one
         #TODO (gtam) : make nicer
         AWS_API_EXTENSION="$i"
     done
+
+    #store to .settings
+    echo "AWS_API_EXTENSION=$AWS_API_EXTENSION">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     
 	#api configuration
 	cd api
-	sed -e 's/__aws_region__/$AWS_REGION/g' -e 's/__aws_accountNumber__/$AWS_ACCOUNT/g' -e 's/__aws_ext__/$AWS_API_EXTENSION/g' $ARROW_APP_NAME-template.yaml > $ARROW_APP_NAME.yaml
+
+	if [ -f "$ARROW_APP_NAME.yaml" ]; then
+		rm $ARROW_APP_NAME.yaml
+	fi
+
+	sed -e "s#__aws_region__#$AWS_REGION#g" -e "s#__aws_accountNumber__#$AWS_ACCOUNT#g" -e "s#__aws_ext__#$AWS_API_EXTENSION#g" $ARROW_APP_NAME-template.yaml > $ARROW_APP_NAME.yaml
 	java -jar lib/aws-apigateway-importer.jar --create --deploy $AWS_API_STAGE $ARROW_APP_NAME.yaml
 
 	###do a check
 	#aws apigateway get-stage --rest-api-id $(aws apigateway get-rest-apis --query 'items[?name.contains(@, `$ARROW_APP_SEARCH_NEEDLE`)].id' --output text) --stage-name $AWS_API_STAGE
     
-    #store to .settings
-    echo "AWS_API_EXTENSION=$AWS_API_EXTENSION">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
-
 	#reset the path
 	cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
 
@@ -223,8 +237,9 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	echo -e "***Configuring Dashboard on S3..."
     cd ui/content/js
 	#get the api identifier
-	AWS_API_IDENTIFIER=$(aws apigateway get-rest-apis --query 'items[?name.contains(@, `$ARROW_APP_SEARCH_NEEDLE`)].id' --output text)
-    
+	#TODO (gtam): find a way to insert shell var into aws 
+	AWS_API_IDENTIFIER=$(aws apigateway get-rest-apis --query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
+
     #build the aws gateway?
     AWS_API_GATEWAY="https://$AWS_API_IDENTIFIER.execute-api.$AWS_REGION.amazonaws.com/$AWS_API_STAGE"
     
@@ -232,7 +247,11 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     echo "AWS_API_IDENTIFIER=$AWS_API_IDENTIFIER">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     echo "AWS_API_GATEWAY=$AWS_API_GATEWAY">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     
-    sed -e 's/__aws_api_gateway__/$AWS_API_GATEWAY/g' config_template.js > config.js
+    if [ -f "config.js" ]; then
+		rm config.js
+	fi
+
+    sed -e "s#__aws_api_gateway__#$AWS_API_GATEWAY#g" config_template.js > config.js
     
     #reset the path
 	cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
@@ -255,7 +274,11 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     #store to .settings
     echo "AWS_S3_ARN=$AWS_S3_ARN">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     
-    sed -e 's/__aws_s3_identifier__/$AWS_S3_ARN/g' bucket-policy-template.json > bucket-policy.json
+    if [ -f "bucket-policy.json" ]; then
+		rm bucket-policy.json
+	fi
+
+    sed -e "s#__aws_s3_identifier__#$AWS_S3_ARN#g" bucket-policy-template.json > bucket-policy.json
 
 	aws s3api put-bucket-policy --bucket $ARROW_APP_NAME-$AWS_S3_IDENTIFIER --policy file://bucket-policy.json
 	aws s3 website s3://$ARROW_APP_NAME-$AWS_S3_IDENTIFIER --index-document index.html
