@@ -11,7 +11,7 @@ ARROW_INSTALLER_SETTINGS=".settings"
 AWS_S3_IDENTIFIER=""
 
 echo -e "################################################"
-echo -e "# Welcome to Arrow's $ARROW_APP_SEARCH_NEEDLE for Amazon AWS       #"
+echo -e "# Welcome to Arrow's $ARROW_APP_SEARCH_NEEDLE for Amazon AWS       "
 echo -e "#    This script will uninstall and cleanup resources in Amazon"
 echo -e "################################################"
 
@@ -37,61 +37,69 @@ else
     fi
 fi
 
-if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
-    
-    #reset the path
-    cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
-    
-#------------------
+echo -e "CAUTION: THIS WILL REMOVE ALL RESOURCES RELATED TO $ARROW_APP_SEARCH_NEEDLE FROM YOUR AMAZON ACCOUNT. TYPE YES IF YOU WANT TO CONTINUE"
+read pRemove
 
-    echo -e "***Removing Amazon IAM and IoT Elements..."
-    cd admin
-    node lib/foundation.js delete
-    
-    #reset the path
-    cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
+if [ "$pRemove" == "YES" ] ; then
 
-#------------------
-    
-    echo -e "***Removing Amazon lambda functions..."
-    cd lambda
-    export NODE_PATH=lib
-    grunt delete
-    
-    #reset the path
-    cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
-    
- #------------------
-    
-    echo -e "***Removing Amazon API gateway..."
-    
-    API_LIST=$(aws apigateway get-rest-apis --query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
-    for i in $(echo $API_LIST | tr  -s ' ')
-    do
-         echo -e "deleting $i ..."
-         aws apigateway delete-rest-api --rest-api-id $i
-    done
-    
-    #reset the path
-    cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
+    if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
+        
+        #reset the path
+        cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
+        
+    #------------------
 
- #------------------
-    
-    echo -e "***Removing Bucket from S3..."
-    aws s3 rm s3://$ARROW_APP_NAME-$AWS_S3_IDENTIFIER --recursive
- 
- #------------------
+        echo -e "***Removing Amazon IAM and IoT Elements..."
+        cd admin
+        node lib/foundation.js delete
+        
+        #reset the path
+        cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
 
-    echo -e "***Removing the Thing..."
-    cd admin
-    node lib/things.js delete $THING_ID
+    #------------------
+        
+        echo -e "***Removing Amazon lambda functions..."
+        cd lambda
+        export NODE_PATH=lib
+        grunt delete
+        
+        #reset the path
+        cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
+        
+     #------------------
+        
+        echo -e "***Removing Amazon API gateway..."
+        
+        API_LIST=$(aws apigateway get-rest-apis --query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
+        for i in $(echo $API_LIST | tr  -s ' ')
+        do
+             echo -e "deleting $i ..."
+             aws apigateway delete-rest-api --rest-api-id $i
+        done
+        
+        #reset the path
+        cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
 
- #------------------
+     #------------------
+        
+        echo -e "***Removing Bucket from S3..."
+        aws s3 rm s3://$ARROW_APP_NAME-$AWS_S3_IDENTIFIER --recursive
+     
+     #------------------
 
- echo -e "################################################"
- echo -e "# Uninstall and Cleanup Complete               #"
- echo -e "################################################"
-    
+        echo -e "***Removing the Thing..."
+        cd admin
+        node lib/things.js delete $THING_ID
+
+     #------------------
+
+     echo -e "################################################"
+     echo -e "# Uninstall and Cleanup Complete               #"
+     echo -e "################################################"
+        
+    else
+      echo "Please make sure the directory '$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION' is accesible"
+    fi
 else
-  echo "Please make sure the directory '$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION' is accesible"
+  echo -e "***Uninstall Cancelled."  
 fi
