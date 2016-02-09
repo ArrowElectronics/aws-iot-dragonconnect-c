@@ -354,15 +354,14 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 
     echo -e "***Building Client..."
 
-    cd DragonBoard/template
+    cd DragonBoard
     AWS_ENDPOINT=$(aws iot describe-endpoint --query endpointAddress --output text | tr :[A-Z] :[a-z])
 
     echo -e "#### Detected $AWS_ENDPOINT as Amazon AWS Endpoint"
     #store to .settings
     echo "AWS_ENDPOINT=$AWS_ENDPOINT">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
 
-    sed -e "s/STRING_TO_REPLACE/STRING_TO_REPLACE_IT/g" aws_demo_template.c > aws_demo.c
-    mv aws_demo.c ../src
+    sed -e "s/STRING_TO_REPLACE/STRING_TO_REPLACE_IT/g" template/aws_demo_template.c > src/aws_demo.c
 
     make
 
