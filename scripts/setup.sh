@@ -132,7 +132,7 @@ else
 	#extract a 5 char length from thing id
 	THING_ID_LENGTH=$(echo -n $THING_ID_STR | wc -c)
 	IDX=$(expr $THING_ID_LENGTH - 5)
-	AWS_S3_IDENTIFIER=$(echo $THING_ID_STR | cut -c$IDX)
+	AWS_S3_IDENTIFIER=$(echo $THING_ID_STR | cut -c$IDX-$THING_ID_LENGTH)
 	
 fi
 
