@@ -86,6 +86,11 @@ if [ -f "ui/content/js/config.js" ]; then
 	rm ui/content/js/config.js
 fi
 
+if [ -f "DragonBoard/src/aws_demo.c" ]; then
+    rm DragonBoard/src/aws_demo.c
+fi
+
+
 #----------------------------
 
 #store to .settings
@@ -337,6 +342,24 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	cd DragonBoard/certs
 	cp $ARROW_CERT_DIR/$THING_ID/aws.{key,crt} .
 
+    #reset the path
+    cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
+
+#------------------
+
+    echo -e "***Building Client..."
+
+    cd DragonBoard
+    ENDPOINT_INPUT=$(aws iot describe-endpoint --query endpointAddress --output text | tr :[A-Z] :[a-z])
+
+    echo -e "#### Detected $AWS_ENDPOINT as Amazon AWS Endpoint"
+    #store to .settings
+    echo "AWS_ENDPOINT=$ENDPOINT_INPUT">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
+
+    sed -e "s/STRING_TO_REPLACE/STRING_TO_REPLACE_IT/g" template/aws_demo_template.c > src/aws_demo.c
+
+    make
+
 #------------------
 	
 echo -e "################################################"
@@ -351,6 +374,7 @@ echo -e "################################################"
 
     echo -e "#### Access your $ARROW_APP_SEARCH_NEEDLE API Gateway here: $AWS_API_GATEWAY"
 	echo -e "#### Access your $ARROW_APP_SEARCH_NEEDLE Dashboard here: $APP_S3_PATH"
+    echo -e "#### Access your $ARROW_APP_SEARCH_NEEDLE Endpoing here: $AWS_ENDPOINT"
 
 #------------------
 

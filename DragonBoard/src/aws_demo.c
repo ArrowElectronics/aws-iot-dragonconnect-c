@@ -34,7 +34,7 @@ int MSG_SetReportedState( int payload_len, char * payload, bool rep_state);
 
 //Globals
 char certDirectory[PATH_MAX + 1] = "../certs";
-char HostAddress[255] = "INVALID_HOST_SEE_USER_GUIDE";
+char HostAddress[255] = "__aws_host__";
 uint16_t port = 8883;
 
 char vol_button_topic[]="things/%s/audio/events";
