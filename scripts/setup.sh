@@ -203,13 +203,8 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 
 	echo -e "***Configuring Amazon API gateway..."
 	#get the extension
-	EXT_INPUT=$(aws iam list-roles --query 'Roles[?RoleName.contains(@, `$ARROW_APP_SEARCH_NEEDLE-ApiGateway`)].RoleName' --output text)
-    
-    echo -e "bfs: $EXT_INPUT"
-    #this call takes some time
-    sleep 5
-    echo -e "afs: $EXT_INPUT"
-    
+	#TODO (gtam): find a way to insert shell var into aws 
+	EXT_INPUT=$(aws iam list-roles --query "Roles[?RoleName.contains(@, `DragonConnect-ApiGateway`)].RoleName" --output text)
 
     for i in $(echo $EXT_INPUT | tr "-" "\n")
     do
@@ -242,12 +237,8 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	echo -e "***Configuring Dashboard on S3..."
     cd ui/content/js
 	#get the api identifier
-	AWS_API_IDENTIFIER=$(aws apigateway get-rest-apis --query 'items[?name.contains(@, `$ARROW_APP_SEARCH_NEEDLE`)].id' --output text)
-    
-    echo -e "bfs: $AWS_API_IDENTIFIER"
-    #this call takes some time
-    sleep 5
-    echo -e "afs: $AWS_API_IDENTIFIER"
+	#TODO (gtam): find a way to insert shell var into aws 
+	AWS_API_IDENTIFIER=$(aws apigateway get-rest-apis --query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
 
     #build the aws gateway?
     AWS_API_GATEWAY="https://$AWS_API_IDENTIFIER.execute-api.$AWS_REGION.amazonaws.com/$AWS_API_STAGE"
