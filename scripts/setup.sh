@@ -38,15 +38,30 @@ if [ ! -d "$BASE_DRAGONBOARD_DIR" ]; then
 	fi
 fi
 
+
 #------------------
 
 ARROW_SCRIPTS_DIR="$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION/scripts/"
 #lets remove the current script settings
 cd $ARROW_SCRIPTS_DIR
 
+#----------------------------
+#installer stuff
+
 if [ -f "$ARROW_INSTALLER_SETTINGS" ]; then
 	rm $ARROW_INSTALLER_SETTINGS
 fi
+
+#node stuff - it seems that if you screw up install and the node_modules folder is still there, it screws things up
+if [ -d "admin/node_modules" ]; then
+	rm -Rf admin/node_modules
+fi
+
+if [ -d "lambda/node_modules" ]; then
+	rm -Rf lambda/node_modules
+fi
+
+#----------------------------
 
 #store to .settings
 echo "BASE_DRAGONBOARD_DIR=$BASE_DRAGONBOARD_DIR">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS

@@ -59,7 +59,8 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
  #------------------
     
     echo -e "***Removing Amazon API gateway..."
-    aws apigateway delete-rest-api --rest-api-id $(aws apigateway get-rest-apis --query 'items[?name.contains(@, `$ARROW_APP_SEARCH_NEEDLE`)].id' --output text)
+    #TODO (gtam): search string to be not hardcoded
+    aws apigateway delete-rest-api --rest-api-id $(aws apigateway get-rest-apis --query 'items[?name.contains(@, `DragonConnect`)].id' --output text)
     
     #reset the path
     cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
@@ -67,7 +68,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
  #------------------
     
     echo -e "***Removing Bucket from S3..."
-    aws s3 rm -r s3://$ARROW_APP_NAME-$AWS_S3_IDENTIFIER
+    aws s3 rm s3://$ARROW_APP_NAME-$AWS_S3_IDENTIFIER --recursive
  
  #------------------
     
