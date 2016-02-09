@@ -205,12 +205,21 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	#get the extension
 	EXT_INPUT=$(aws iam list-roles --query 'Roles[?RoleName.contains(@, `$ARROW_APP_SEARCH_NEEDLE-ApiGateway`)].RoleName' --output text)
     
+    echo -e "bfs: $EXT_INPUT"
+    #this call takes some time
+    sleep 5
+    echo -e "afs: $EXT_INPUT"
+    
+
     for i in $(echo $EXT_INPUT | tr "-" "\n")
     do
         #this is kind of a hack, since we only need the last one
         #TODO (gtam) : make nicer
         AWS_API_EXTENSION="$i"
     done
+
+    #store to .settings
+    echo "AWS_API_EXTENSION=$AWS_API_EXTENSION">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     
 	#api configuration
 	cd api
@@ -225,9 +234,6 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	###do a check
 	#aws apigateway get-stage --rest-api-id $(aws apigateway get-rest-apis --query 'items[?name.contains(@, `$ARROW_APP_SEARCH_NEEDLE`)].id' --output text) --stage-name $AWS_API_STAGE
     
-    #store to .settings
-    echo "AWS_API_EXTENSION=$AWS_API_EXTENSION">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
-
 	#reset the path
 	cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
 
@@ -238,6 +244,11 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	#get the api identifier
 	AWS_API_IDENTIFIER=$(aws apigateway get-rest-apis --query 'items[?name.contains(@, `$ARROW_APP_SEARCH_NEEDLE`)].id' --output text)
     
+    echo -e "bfs: $AWS_API_IDENTIFIER"
+    #this call takes some time
+    sleep 5
+    echo -e "afs: $AWS_API_IDENTIFIER"
+
     #build the aws gateway?
     AWS_API_GATEWAY="https://$AWS_API_IDENTIFIER.execute-api.$AWS_REGION.amazonaws.com/$AWS_API_STAGE"
     
