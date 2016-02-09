@@ -25,7 +25,7 @@ NODE_PATH=""
 CERT_REGISTRY_DIR=""
 
 echo -e "################################################"
-echo -e "# Welcome to Arrow's $ARROW_APP_SEARCH_NEEDLE for Amazon AWS       #"
+echo -e "# Welcome to Arrow's $ARROW_APP_SEARCH_NEEDLE for Amazon AWS       "
 echo -e "#    This script will setup and provision your $ARROW_APP_SEARCH_NEEDLE"
 echo -e "################################################"
 
@@ -100,7 +100,7 @@ read pCertDir
 if [ "$pCertDir" != "" ] ; then
     ARROW_CERT_DIR=$pCertDir
 else
-   ARROW_CERT_DIR=$DEFAULT_REGISTRY_DIR
+   ARROW_CERT_DIR=$BASE_DRAGONBOARD_DIR/$DEFAULT_REGISTRY_DIR
 fi
 
 #store to .settings
@@ -335,12 +335,12 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 
 	echo -e "***Installing Certificates for the Device..."
 	cd DragonBoard/certs
-	cp $BASE_DRAGONBOARD_DIR/$ARROW_CERT_DIR/$THING_ID/aws.{key,crt} .
+	cp $ARROW_CERT_DIR/$THING_ID/aws.{key,crt} .
 
 #------------------
 	
 echo -e "################################################"
-echo -e "# Build Complete       #"
+echo -e "# Build Complete       "
 echo -e "################################################"
 
     #build s3 path
