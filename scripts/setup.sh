@@ -2,8 +2,8 @@
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
 
 
-BASE_DRAGONBOARD_DIR="/Documents"
-DEFAULT_REGISTRY_DIR="registry"
+BASE_DRAGONBOARD_DIR="/home/linaro/Documents"
+DEFAULT_REGISTRY_DIR="/registry"
 ARROW_DIR="arrow"
 ARROW_APPLICATION="aws-iot-dragonconnect-c"
 ARROW_APP_SEARCH_NEEDLE="DragonConnect"
@@ -89,13 +89,13 @@ echo "ARROW_SCRIPTS_DIR=$ARROW_SCRIPTS_DIR">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER
 
 #------------------
 
-echo -e "Enter a Location to Store Certificates and Keys (Default is $BASE_DRAGONBOARD_DIR/$DEFAULT_REGISTRY_DIR):"
+echo -e "Enter a Location to Store Certificates and Keys (Default is $BASE_DRAGONBOARD_DIR$DEFAULT_REGISTRY_DIR):"
 read pCertDir
 
 if [ "$pCertDir" != "" ] ; then
     ARROW_CERT_DIR=$pCertDir
 else
-   ARROW_CERT_DIR=$BASE_DRAGONBOARD_DIR/$DEFAULT_REGISTRY_DIR
+   ARROW_CERT_DIR=$DEFAULT_REGISTRY_DIR
 fi
 
 #store to .settings
