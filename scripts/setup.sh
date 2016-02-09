@@ -204,7 +204,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	echo -e "***Configuring Amazon API gateway..."
 	#get the extension
 	#TODO (gtam): find a way to insert shell var into aws 
-	EXT_INPUT=$(aws iam list-roles --query "Roles[?RoleName.contains(@, `DragonConnect-ApiGateway`)].RoleName" --output text)
+	EXT_INPUT=$(aws iam list-roles --query 'Roles[?RoleName.contains(@, `DragonConnect-ApiGateway`)].RoleName' --output text)
 
     for i in $(echo $EXT_INPUT | tr "-" "\n")
     do
