@@ -160,7 +160,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 		rm index.js
 	fi
 
-    sed -e "s/__aws_region__/$AWS_REGION/g" -e "s/__aws_accountNumber__/$AWS_ACCOUNT/g" -e "s/__aws_registryDir__/$ARROW_CERT_DIR/g" index-template.js > index.js
+    sed -e "s/__aws_region__/$AWS_REGION/g" -e "s/__aws_accountNumber__/$AWS_ACCOUNT/g" -e "s/__aws_registryDir__/'$ARROW_CERT_DIR'/g" index-template.js > index.js
     
     #reset the path
     cd $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION
