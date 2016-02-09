@@ -51,6 +51,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     
     echo -e "***Removing Amazon lambda functions..."
     cd lambda
+    export NODE_PATH=lib
     grunt delete
     
     #reset the path

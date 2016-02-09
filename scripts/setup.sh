@@ -200,7 +200,6 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	echo -e "***Modifying Amazon lambda functions..."
 	#Lambda function management
 	cd lambda
-	NODE_PATH=lib
     export NODE_PATH=lib
     
 	npm install ../config
