@@ -6,7 +6,6 @@ var fs = require('fs'),
 var AWS = require('aws-sdk'),
     Bluebird = require('bluebird'),
     mkdirp = require('mkdirp'),
-    homedir = require('home-dir'),
     rimraf = require('rimraf');
 
 var config = require('dragonconnect-config'),
@@ -19,7 +18,7 @@ var KEYS_AND_CERTIFICATES_FILE_NAME = 'certificatesAndKeys.json';
 var RESOURCE_NOT_FOUND_ERROR = 'ResourceNotFoundError';
 
 function getRegistry(thingId) {
-  return path.join(homedir(), config.admin.registry, thingId);
+  return path.join(config.admin.registry, thingId);
 }
 
 function getThing(iot, context) {
@@ -112,21 +111,30 @@ function createPrincipal(iot, context) {
   var mkdir = Bluebird.promisify(mkdirp);
   var awsCreateKeysAndCertificate = Bluebird.promisify(iot.createKeysAndCertificate, { context: iot });
 
-  var thingRegistry = getRegistry(context.thingId);
-
-  return mkdir(thingRegistry)
-    .then(function() {
-        return awsCreateKeysAndCertificate({
-            setAsActive: true
-        })
+  return Bluebird.try(function() {
+        return getRegistry(context.thingId);
       })
-    .then(function(data) {
-        fs.writeFileSync(path.join(thingRegistry, KEYS_AND_CERTIFICATES_FILE_NAME),
-          JSON.stringify(data, null, 2));
-        fs.writeFileSync(path.join(thingRegistry, 'aws.crt'), data.certificatePem);
-        fs.writeFileSync(path.join(thingRegistry, 'aws.key'), data.keyPair.PrivateKey);
+    .then(function(thingRegistry) {
+        return mkdir(thingRegistry)
+          .then(function() {
+              return awsCreateKeysAndCertificate({
+                setAsActive: true
+              })
+            })
+          .then(function(data) {
+              fs.writeFileSync(path.join(thingRegistry, KEYS_AND_CERTIFICATES_FILE_NAME),
+                JSON.stringify(data, null, 2));
+              fs.writeFileSync(path.join(thingRegistry, 'aws.crt'), data.certificatePem);
+              fs.writeFileSync(path.join(thingRegistry, 'aws.key'), data.keyPair.PrivateKey);
 
-        return data;
+              return data;
+            })
+          .catch(function(err) {
+              throw err;
+            });
+      })
+    .catch(function(err) {
+        throw err;
       });
 }
 
