@@ -44,7 +44,7 @@ ARROW_SCRIPTS_DIR="$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION/scripts/"
 #lets remove the current script settings
 cd $ARROW_SCRIPTS_DIR
 
-if [ -f " " ]; then
+if [ -f "$ARROW_INSTALLER_SETTINGS" ]; then
 	rm $ARROW_INSTALLER_SETTINGS
 fi
 
@@ -155,6 +155,11 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     echo -e "***Creating Config for Arrow and AWS..."
     
 	cd config
+
+	if [ -f "index.js" ]; then
+		rm index.js
+	fi
+
     sed -e 's/__aws_region__/$AWS_REGION/g' -e 's/__aws_accountNumber__/$AWS_ACCOUNT/g' -e 's/__aws_registryDir__/$ARROW_CERT_DIR/g' index-template.js > index.js
     
     #reset the path
@@ -206,6 +211,11 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     
 	#api configuration
 	cd api
+
+	if [ -f "$ARROW_APP_NAME.yaml" ]; then
+		rm $ARROW_APP_NAME.yaml
+	fi
+
 	sed -e 's/__aws_region__/$AWS_REGION/g' -e 's/__aws_accountNumber__/$AWS_ACCOUNT/g' -e 's/__aws_ext__/$AWS_API_EXTENSION/g' $ARROW_APP_NAME-template.yaml > $ARROW_APP_NAME.yaml
 	java -jar lib/aws-apigateway-importer.jar --create --deploy $AWS_API_STAGE $ARROW_APP_NAME.yaml
 
@@ -232,6 +242,10 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     echo "AWS_API_IDENTIFIER=$AWS_API_IDENTIFIER">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     echo "AWS_API_GATEWAY=$AWS_API_GATEWAY">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     
+    if [ -f "config.js" ]; then
+		rm config.js
+	fi
+
     sed -e 's/__aws_api_gateway__/$AWS_API_GATEWAY/g' config_template.js > config.js
     
     #reset the path
@@ -255,6 +269,10 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     #store to .settings
     echo "AWS_S3_ARN=$AWS_S3_ARN">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     
+    if [ -f "bucket-policy.json" ]; then
+		rm bucket-policy.json
+	fi
+
     sed -e 's/__aws_s3_identifier__/$AWS_S3_ARN/g' bucket-policy-template.json > bucket-policy.json
 
 	aws s3api put-bucket-policy --bucket $ARROW_APP_NAME-$AWS_S3_IDENTIFIER --policy file://bucket-policy.json
