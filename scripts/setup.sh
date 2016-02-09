@@ -24,6 +24,10 @@ AWS_CONFIG_LOCATION="/home/linaro/.aws/config"
 NODE_PATH=""
 CERT_REGISTRY_DIR=""
 
+echo -e "################################################"
+echo -e "# Welcome to Arrow's $ARROW_APP_SEARCH_NEEDLE for Amazon AWS       #"
+echo -e "################################################"
+
 echo -e "DragonConnect should exist at $BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION"
 
 if [ ! -d "$BASE_DRAGONBOARD_DIR" ]; then
@@ -142,7 +146,7 @@ fi
 #store to .settings
 echo "AWS_ACCOUNT=$AWS_ACCOUNT">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
 
-echo -e "*Using $AWS_REGION as AWS Region"
+echo -e "#### Using $AWS_REGION as AWS Region"
 
 #------------------
 
@@ -153,7 +157,7 @@ if [ "$pStage" != "" ] ; then
     AWS_API_STAGE=$pStage
 fi
 
-echo -e "*Using $AWS_API_STAGE as API Stage"
+echo -e "#### Using $AWS_API_STAGE as API Stage"
 #store to .settings
 echo "AWS_API_STAGE=$AWS_API_STAGE">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
 
@@ -176,7 +180,7 @@ fi
 #convert to lowercase
 AWS_S3_IDENTIFIER=$(echo $AWS_S3_IDENTIFIER | tr "[:upper:]" "[:lower:]")
 
-echo -e "*Using $AWS_S3_IDENTIFIER as S3 Identifier"
+echo -e "#### Using $AWS_S3_IDENTIFIER as S3 Identifier"
 #store to .settings
 echo "AWS_S3_IDENTIFIER=$AWS_S3_IDENTIFIER">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
 
@@ -243,6 +247,7 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
         AWS_API_EXTENSION="$i"
     done
 
+    echo -e "#### Detected $AWS_API_EXTENSION as API Gateway Extension"
     #store to .settings
     echo "AWS_API_EXTENSION=$AWS_API_EXTENSION">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     
@@ -272,6 +277,8 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
     #build the aws gateway?
     AWS_API_GATEWAY="https://$AWS_API_IDENTIFIER.execute-api.$AWS_REGION.amazonaws.com/$AWS_API_STAGE"
     
+    echo -e "#### Detected $AWS_API_IDENTIFIER as API Gateway Identifier"
+
     #store to .settings
     echo "AWS_API_IDENTIFIER=$AWS_API_IDENTIFIER">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
     echo "AWS_API_GATEWAY=$AWS_API_GATEWAY">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
@@ -315,6 +322,8 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	export THING_ID=$THING_ID
 	node lib/things.js create $THING_ID
     
+	echo -e "#### Detected $THING_ID as Thing ID"
+
     #store to .settings
     echo "THING_ID=$THING_ID">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
 
@@ -328,15 +337,19 @@ if [ -d "$BASE_DRAGONBOARD_DIR/$ARROW_DIR/$ARROW_APPLICATION" ]; then
 	cp $BASE_DRAGONBOARD_DIR/$ARROW_CERT_DIR/$THING_ID/aws.{key,crt} .
 
 #------------------
-
 	
-    
+echo -e "################################################"
+echo -e "# Build Complete       #"
+echo -e "################################################"
+
     #build s3 path
     APP_S3_PATH="http://$ARROW_APP_NAME-$AWS_S3_IDENTIFIER.s3-website-$AWS_REGION.amazonaws.com"
-	echo -e "***Access your DragonConnect dashboard here: $APP_S3_PATH"
     
     #store to .settings
     echo "APP_S3_PATH=$APP_S3_PATH">>$ARROW_SCRIPTS_DIR/$ARROW_INSTALLER_SETTINGS
+
+    echo -e "#### Access your $ARROW_APP_SEARCH_NEEDLE API Gateway here: $AWS_API_GATEWAY"
+	echo -e "#### Access your $ARROW_APP_SEARCH_NEEDLE Dashboard here: $APP_S3_PATH"
 
 #------------------
 
