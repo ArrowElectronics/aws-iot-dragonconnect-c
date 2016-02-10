@@ -17,14 +17,15 @@ detailed.  The documentation includes information on how to execute the client
 and visit the dashboard.
 
 # Getting Started
+Please have the following information available:
+    * Amazon Account Number - (https://console.aws.amazon.com/billing/home#/account)
+    * Stage - Amazon API Gateway deploys to a stage, so it must be specified, By default 'dev' is used. (http://arrowelectronics.github.io/aws-iot-dragonconnect-c/admin/api.html)
+    * S3 Identifier - S3 is used to host the client, it would be best to give it something unique. By default the last 5 characters of the machine id is used. (http://arrowelectronics.github.io/aws-iot-dragonconnect-c/admin/dashboard.html)
+
+After the setup has completed, there are a few urls that are provided. Please make note of them: AWS Endpoint, AWS API Gateway, and Dashboard
 
 1. Navigate to the root of Arrow DragonConnect `/home/linaro/arrow/aws-iot-dragonnect-c`
 2. Run the setup script
-You will be prompted for the following information:
-    * Amazon Account Number
-    * Stage - Amazon API Gateway deploys to a stage, so it must be specified, By default 'dev' is used. (http://arrowelectronics.github.io/aws-iot-dragonconnect-c/admin/api.html)
-    * S3 Identifier - S3 is used to host the client, it would be best to give it something unique. By default the last 5 characters of the machine id is used. (http://arrowelectronics.github.io/aws-iot-dragonconnect-c/admin/dashboard.html)
-After the setup has completed, there are a few urls that are provided. Please make note of them: AWS Endpoint, AWS API Gateway, and Dashboard
 ```sh
     $ cd scripts
     $ ./setup.sh
